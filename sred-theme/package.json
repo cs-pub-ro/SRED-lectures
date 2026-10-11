@@ -36,6 +36,7 @@
   "slidev": {
     "colorSchema": "light",
     "defaults": {
+      "routerMode": "hash",
       "aspectRatio": "16/9",
       "fonts": {
         "serif": "Libertinus Serif, Linux Libertine, Noto Serif SC, Source Han Serif SC, Noto Serif CJK SC, Georgia, serif",

@@ -73,8 +73,8 @@ jobs:
 
               if [ -n "$md_file" ]; then
                 echo "Building HTML for $lecture_name..."
-                # Ensure correct base path for GitHub Pages
-                npx @slidev/cli build "$md_file" --base "/$REPO_NAME/$lecture_name/" --out "$GITHUB_WORKSPACE/public_html/$lecture_name"
+                # Ensure correct base path and hash router mode for GitHub Pages
+                npx @slidev/cli build "$md_file" --base "/$REPO_NAME/$lecture_name/" --router-mode hash --out "$GITHUB_WORKSPACE/public_html/$lecture_name"
                 
                 echo "Building PDF for $lecture_name..."
                 npx @slidev/cli export "$md_file" --format pdf --output "$GITHUB_WORKSPACE/public_html/$lecture_name/slides.pdf" || echo "⚠️ PDF export failed for $lecture_name"

@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Email Security Gateways"
 info: |
   Network Security Using Dedicated Devices

@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Firewalls"
 info: |
   Network Security Using Dedicated Devices

@@ -2,6 +2,7 @@
 
 
 theme: sred-theme
+routerMode: hash
 title: "Ethernet Switch Security"
 info: |
   Network Security Using Dedicated Devices

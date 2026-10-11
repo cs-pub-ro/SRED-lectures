@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Secure Web Gateways and Forward Proxies"
 info: |
   Network Security Using Dedicated Devices

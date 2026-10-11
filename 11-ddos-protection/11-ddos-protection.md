@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "DDoS Protection"
 info: |
   Network Security Using Dedicated Devices

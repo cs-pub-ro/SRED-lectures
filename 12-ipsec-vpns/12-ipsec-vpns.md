@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "IPsec VPNs"
 info: |
   Network Security Using Dedicated Devices

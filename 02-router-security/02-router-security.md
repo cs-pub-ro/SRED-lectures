@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Router Security"
 info: |
   Network Security Using Dedicated Devices

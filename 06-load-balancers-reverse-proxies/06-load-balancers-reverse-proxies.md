@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Load Balancers and Reverse Proxies"
 info: |
   Network Security Using Dedicated Devices

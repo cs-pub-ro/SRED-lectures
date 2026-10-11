@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Network Access Control"
 info: |
   Network Security Using Dedicated Devices

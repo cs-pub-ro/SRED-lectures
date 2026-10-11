@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "Zero Trust, HSMs, and Compliance"
 info: |
   Network Security Using Dedicated Devices

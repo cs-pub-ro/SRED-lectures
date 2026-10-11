@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "IDS, IPS, and Network Security Monitoring"
 info: |
   Network Security Using Dedicated Devices

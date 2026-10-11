@@ -1,6 +1,7 @@
 ---
 
 theme: sred-theme
+routerMode: hash
 title: "TLS VPNs"
 info: |
   Network Security Using Dedicated Devices
