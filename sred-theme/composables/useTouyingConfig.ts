@@ -28,7 +28,7 @@ export interface TouyingConfig {
 // ---- Defaults & maps -------------------------------------------------------
 
 const DEFAULTS: TouyingConfig = {
-  preset: 'dewdrop',
+  preset: 'isc',
   navigation: 'mini-slides',
   footer: '',
   footerRight: '',

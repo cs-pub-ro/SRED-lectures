@@ -1,8 +1,11 @@
 ---
-
-
-theme: sred-theme
 routerMode: hash
+download: 'slides.pdf'
+theme: ../sred-theme
+colorSchema: light
+selectable: false
+touying:
+  preset: isc
 title: "Ethernet Switch Security"
 info: |
   Network Security Using Dedicated Devices
@@ -15,8 +18,6 @@ mdc: true
 # Ethernet Switch Security
 
 ## Layer 2 as a security boundary
-
-Goal: understand what a switch can enforce before traffic ever reaches a router or firewall.
 
 ---
 
@@ -90,10 +91,18 @@ Learning is convenient, but it is also part of the attack surface.
 
 Conceptually:
 
-| MAC | VLAN | Port |
-|---|---:|---:|
-| `00:11:22:33:44:55` | 10 | 3 |
-| `00:11:22:33:44:66` | 10 | 7 |
+| MAC | VLAN | Port | Age (s) |
+|---|---:|---:|---:|
+| `00:11:22:33:44:55` | 10 | 3 | 120 |
+| `00:11:22:33:44:66` | 10 | 7 | 45 |
+
+Each entry has an **aging timer** (typically 300 s by default). If a MAC is not seen again before the timer expires, the entry is removed and traffic to that MAC is flooded until it is re-learned.
+
+Why aging matters for security:
+
+- **stale entries** would prevent correct forwarding after a host moves;
+- an attacker who stays quiet can **disappear** from the table, then reappear on a different port;
+- very short aging timers increase flooding; very long timers delay detection of topology changes.
 
 Security questions:
 

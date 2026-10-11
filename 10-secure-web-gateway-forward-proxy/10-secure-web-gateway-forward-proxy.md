@@ -1,7 +1,11 @@
 ---
-
-theme: sred-theme
 routerMode: hash
+download: 'slides.pdf'
+theme: ../sred-theme
+colorSchema: light
+selectable: false
+touying:
+  preset: isc
 title: "Secure Web Gateways and Forward Proxies"
 info: |
   Network Security Using Dedicated Devices

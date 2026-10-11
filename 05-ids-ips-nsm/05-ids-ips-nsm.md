@@ -1,7 +1,11 @@
 ---
-
-theme: sred-theme
 routerMode: hash
+download: 'slides.pdf'
+theme: ../sred-theme
+colorSchema: light
+selectable: false
+touying:
+  preset: isc
 title: "IDS, IPS, and Network Security Monitoring"
 info: |
   Network Security Using Dedicated Devices
