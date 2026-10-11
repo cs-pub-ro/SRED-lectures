@@ -1,0 +1,103 @@
+name: Deploy Slidev to GitHub Pages
+
+on:
+  push:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npx playwright install-deps
+          npx playwright install chromium
+
+      - name: Build all lectures
+        run: |
+          mkdir -p public_html
+          touch public_html/.nojekyll
+          
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          REPO_NAME="${REPO_NAME:-SRED-lectures}"
+          
+          cat << 'EOF' > public_html/index.html
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>SRED Lectures</title>
+            <style>
+              body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
+              h1 { color: #176B87; }
+              ul { list-style: none; padding: 0; }
+              li { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+              a { color: #176B87; text-decoration: none; font-weight: 500; font-size: 1.05em; }
+              a:hover { text-decoration: underline; }
+              .pdf-link { color: #555; font-size: 0.9em; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+              .pdf-link:hover { background: #e0e0e0; text-decoration: none; }
+            </style>
+          </head>
+          <body>
+            <h1>SRED Lectures</h1>
+            <ul>
+          EOF
+
+          for lecture_dir in [0-9]*; do
+            if [ -d "$lecture_dir" ]; then
+              lecture_name=$(basename "$lecture_dir")
+              md_file=""
+              if [ -f "$lecture_dir/$lecture_name.md" ]; then
+                md_file="$lecture_dir/$lecture_name.md"
+              elif [ -f "$lecture_dir/slides.md" ]; then
+                md_file="$lecture_dir/slides.md"
+              fi
+
+              if [ -n "$md_file" ]; then
+                echo "Building HTML for $lecture_name..."
+                # Ensure correct base path for GitHub Pages
+                npx @slidev/cli build "$md_file" --base "/$REPO_NAME/$lecture_name/" --out "$GITHUB_WORKSPACE/public_html/$lecture_name"
+                
+                echo "Building PDF for $lecture_name..."
+                npx @slidev/cli export "$md_file" --format pdf --output "$GITHUB_WORKSPACE/public_html/$lecture_name/slides.pdf" || echo "⚠️ PDF export failed for $lecture_name"
+                
+                echo "<li><a href='$lecture_name/'>$lecture_name</a> <a class='pdf-link' href='$lecture_name/slides.pdf'>PDF</a></li>" >> public_html/index.html
+              fi
+            fi
+          done
+          
+          echo "</ul></body></html>" >> public_html/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public_html
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

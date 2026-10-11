@@ -1,0 +1,9 @@
+node_modules/
+dist/
+public_html/
+.DS_Store
+*/.DS_Store
+*.log
+.vite/
+slides.pdf
+slides.png

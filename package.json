@@ -1,0 +1,21 @@
+{
+  "name": "sred-lectures",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export",
+    "format": "slidev format"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.19.1",
+    "@slidev/theme-default": "latest",
+    "slidev-theme-touying": "^0.1.10",
+    "sred-theme": "file:./sred-theme",
+    "vue": "^3.5.33"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.50.0"
+  }
+}

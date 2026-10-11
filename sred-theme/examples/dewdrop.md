@@ -1,0 +1,216 @@
+---
+theme: ../
+title: slidev-theme-touying
+subtitle: Dewdrop
+author: Kerman
+routerMode: hash
+transition: slide-left
+
+touying:
+  preset: dewdrop
+  navigation: mini-slides # sidebar | mini-slides | none
+  footer: slidev-theme-touying · Dewdrop
+  footerRight: ''
+---
+
+# slidev-theme-touying
+
+2026
+
+Adapted from typst-touying
+
+---
+layout: outline
+---
+
+---
+layout: section
+---
+
+# About the Theme
+
+---
+
+# Origin
+
+This theme is a faithful port of the **Dewdrop** sub-theme from [typst-touying](https://github.com/touying-typ/touying), a presentation framework for Typst.
+
+The original Dewdrop features a clean serif style, progressive outline navigation, and a muted dark-green palette — all replicated here for Slidev.
+
+---
+
+# Configuration
+
+All theme options are set in the first slide's frontmatter.
+
+```yaml
+touying:
+  preset: dewdrop
+  navigation: mini-slides   # sidebar | mini-slides | none
+  footer: My Presentation
+  footerRight: ''
+  outlineRowsPerCol: 12
+  alpha: 0.3
+  miniSlides:
+    height: '2em'
+    linebreaks: auto        # true | false | auto
+    subsection: true        # show subsection dots
+  sidebar:
+    width: '10em'
+```
+
+---
+
+# Navigation: Sidebar
+
+The current mode is **sidebar** — a fixed panel on the right listing all sections. The active section is highlighted in the primary color; others are dimmed by `alpha`.
+
+Change to mini-slides:
+
+```yaml
+touying:
+  navigation: mini-slides
+```
+
+Or disable entirely:
+
+```yaml
+touying:
+  navigation: none
+```
+
+---
+
+# Layouts
+
+| Layout | Purpose |
+|--------|---------|
+| `cover` | Title slide — centered box, author/date/institution |
+| `default` | Content slide with navigation + footer |
+| `section` | Section divider with progressive outline |
+| `outline` | Standalone full outline |
+| `focus` | Full-screen accent slide |
+
+Built-in layouts such as `two-cols` also work seamlessly with the theme.
+
+---
+layout: section
+---
+
+# Markdown Features
+
+---
+
+# Typography
+
+Headings are numbered automatically and continue across slides.
+
+## Level 2
+
+Body text uses Libertinus Serif. **Bold** text is rendered in the primary color. *Italic* is also supported, as is `inline code` and ~~strikethrough~~.
+
+> Blockquotes are styled with a left border in the primary color.
+
+---
+
+# Lists & Links
+
+Unordered list:
+
+- Square bullets by default
+- Nested items work as expected
+  - Second level
+  - Second level
+
+Ordered list:
+
+1. First
+2. Second
+3. Third
+
+[Links are colored](https://github.com/touying-typ/touying) and underlined.
+
+---
+
+# Code Blocks
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Slide:
+    title: str
+    layout: str = "default"
+
+    def render(self) -> str:
+        return f"[{self.layout}] {self.title}"
+```
+
+```ts
+const sum = (a: number, b: number): number => a + b
+```
+
+---
+
+# Tables
+
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `primary` | color | `#0c4842` | Accent color |
+| `alpha` | number | `0.4` | Inactive opacity |
+| `navigation` | string | `sidebar` | Nav mode |
+| `sidebarWidth` | length | `10em` | Sidebar width |
+
+---
+
+# Animations
+
+Click to reveal:
+
+- Always visible
+
+<v-click>
+
+- Appears on first click
+
+</v-click>
+
+<v-click>
+
+- Appears on second click <span v-mark.underline.orange>highlighted</span>
+
+</v-click>
+
+---
+layout: two-cols
+---
+
+# Two-Column Layout
+
+**Left column**
+
+The default `two-cols` layout also works.
+
+- Item A
+- Item B
+- Item C
+
+::right::
+
+**Right column**
+
+```python
+def fib(n: int) -> int:
+    if n <= 1:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+print(fib(10))  # 55
+```
+
+
+---
+layout: focus
+---
+
+Use `layout: focus` for key takeaways

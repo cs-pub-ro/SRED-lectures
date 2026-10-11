@@ -1,0 +1,10 @@
+services:
+  slidev-build-docker:
+    build: .
+    container_name: sred-slidev-build-docker
+    volumes:
+      - ../:/app
+      - /app/node_modules
+    ports:
+      - "80:80"
+      - "3030:3030"

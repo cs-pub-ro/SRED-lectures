@@ -1,0 +1,71 @@
+{
+  "name": "sred-theme",
+  "version": "0.1.10",
+  "type": "module",
+  "description": "A Slidev theme inspired by typst-touying",
+  "keywords": [
+    "slidev-theme",
+    "slidev",
+    "touying",
+    "dewdrop",
+    "university",
+    "simple"
+  ],
+  "author": {
+    "name": "_Kerman",
+    "email": "kermanx@qq.com",
+    "url": "https://github.com/kermanx"
+  },
+  "homepage": "https://github.com/kermanx/slidev-theme-touying#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kermanx/slidev-theme-touying.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "slidev": ">=0.52.0"
+  },
+  "scripts": {
+    "dev": "slidev",
+    "build": "slidev build",
+    "dev:entry": "slidev ./entry.md",
+    "dev:dewdrop": "slidev ./examples/dewdrop.md",
+    "dev:university": "slidev ./examples/university.md",
+    "dev:simple": "slidev ./examples/simple.md"
+  },
+  "slidev": {
+    "colorSchema": "light",
+    "defaults": {
+      "aspectRatio": "16/9",
+      "fonts": {
+        "serif": "Libertinus Serif, Linux Libertine, Noto Serif SC, Source Han Serif SC, Noto Serif CJK SC, Georgia, serif",
+        "sans": "Fira Sans",
+        "mono": "Fira Code",
+        "weights": "400,600",
+        "local": "Libertinus Serif, Linux Libertine, Source Han Serif SC, Noto Serif CJK SC, Georgia, serif"
+      }
+    }
+  },
+  "files": [
+    "composables",
+    "layouts",
+    "setup",
+    "styles",
+    "themes",
+    "package.json",
+    "README.md",
+    "LICENSE",
+    "slides.md",
+    "uno.config.ts",
+    "global-top.vue"
+  ],
+  "devDependencies": {
+    "@slidev/cli": "^52.14.1",
+    "@types/node": "^25.5.0"
+  },
+  "dependencies": {
+    "@antfu/utils": "^9.3.0",
+    "@fontsource/libertinus-serif": "^5.2.1",
+    "@vueuse/core": "^14.2.1"
+  }
+}
