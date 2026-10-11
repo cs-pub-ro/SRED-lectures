@@ -14,17 +14,13 @@ transition: slide-left
 mdc: true
 ---
 
-
 # Ethernet Switch Security
 
 ## Layer 2 as a security boundary
 
 ---
 
-
 # Learning objectives
-
-By the end you should be able to:
 
 - explain MAC learning and VLAN forwarding;
 - identify common Layer-2 attacks;
@@ -34,8 +30,9 @@ By the end you should be able to:
 
 ---
 
-
 # Where the switch sits
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -46,10 +43,11 @@ flowchart LR
   R --> NET["Other networks"]
 ```
 
+</div>
+
 The switch is often the **first enforcement point** after the endpoint.
 
 ---
-
 
 # What can a switch see?
 
@@ -66,8 +64,9 @@ Its native language is still primarily **Layer 2**.
 
 ---
 
-
 # MAC learning
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -82,14 +81,11 @@ sequenceDiagram
   S-->>A: Forward only to port 1
 ```
 
-Learning is convenient, but it is also part of the attack surface.
+</div>
 
 ---
 
-
 # The forwarding table
-
-Conceptually:
 
 | MAC | VLAN | Port | Age (s) |
 |---|---:|---:|---:|
@@ -104,35 +100,28 @@ Why aging matters for security:
 - an attacker who stays quiet can **disappear** from the table, then reappear on a different port;
 - very short aging timers increase flooding; very long timers delay detection of topology changes.
 
-Security questions:
-
-- who is allowed to appear on a port?
-- how many MACs are expected?
-- what if the mapping changes rapidly?
-
 ---
-
 
 # Threat model at Layer 2
 
-```mermaid
-flowchart TB
-  A["Attacker on access port"] --> M1["MAC spoofing"]
-  A --> M2["MAC flooding"]
-  A --> M3["Rogue DHCP"]
-  A --> M4["ARP spoofing"]
-  A --> M5["STP manipulation"]
-  A --> M6["VLAN abuse"]
-```
+An attacker on an access port may attempt:
+
+- **MAC spoofing** — impersonate another host's MAC address;
+- **MAC flooding** — exhaust the forwarding table to cause flooding;
+- **Rogue DHCP** — serve false gateway / DNS information;
+- **ARP spoofing** — redirect traffic via forged ARP replies;
+- **STP manipulation** — inject BPDUs to alter topology decisions;
+- **VLAN abuse** — craft tagged frames to escape the assigned VLAN.
 
 A switch cannot assume that an endpoint connected to an access port is honest.
 
 ---
 
-
 # MAC spoofing
 
 An attacker can change a software-configurable MAC address.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -140,10 +129,11 @@ flowchart LR
   Evil["Attacker / claims MAC A"] --> SW
 ```
 
-Therefore **MAC identity is not strong identity**. It can still be useful as one signal.
+</div>
+
+Therefore **MAC identity is not strong identity**.
 
 ---
-
 
 # Port security idea
 
@@ -164,28 +154,29 @@ Possible reactions:
 
 ---
 
-
 # Static vs learned bindings
 
-Two common models:
-
-__Static__
+**Static**
 - administrator defines the MAC/port mapping;
 - predictable but operationally expensive.
 
-__Learned / sticky__
+**Learned / sticky**
 - first valid MAC is remembered;
 - easier operationally;
 - first device to appear may become trusted accidentally.
 
-Operational convenience changes the security model.
-
 ---
-
 
 # MAC flooding
 
-If a forwarding table is exhausted, some devices may flood more traffic than normal.
+The switch stores MAC-to-port mappings in a **CAM (Content Addressable Memory) table** of finite size. Typical capacities:
+
+- **access switches**: 8K – 32K entries;
+- **larger / campus switches**: 64K – 128K+ entries.
+
+If the table is exhausted, the switch cannot learn new MACs and begins **flooding** frames to all ports in the VLAN. An attacker using a tool like `macof` can fill a small CAM table in seconds.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -194,29 +185,13 @@ flowchart LR
   F --> V["More frames visible on unintended ports"]
 ```
 
-Modern hardware behavior varies, so teach the **resource-exhaustion principle**, not folklore.
+</div>
 
 ---
-
-
-# Mitigating table abuse
-
-Useful controls include:
-
-- per-port MAC limits;
-- violation actions;
-- storm controls;
-- monitoring for rapid MAC churn;
-- disabling unused ports.
-
-The broader principle:
-
-> Put a bound on resources that an untrusted endpoint can consume.
-
----
-
 
 # VLANs
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -228,10 +203,11 @@ flowchart LR
   V30 --> R
 ```
 
+</div>
+
 VLANs create separate Layer-2 broadcast domains.
 
 ---
-
 
 # VLANs are not a complete policy
 
@@ -247,8 +223,9 @@ Inter-VLAN routing plus ACL/firewall policy is still required.
 
 ---
 
-
 # Access ports and trunks
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -257,10 +234,11 @@ flowchart LR
   SW2 --> SRV["Server"]
 ```
 
+</div>
+
 Security goal: endpoint-facing ports should not accidentally become trunks.
 
 ---
-
 
 # VLAN hopping: the lesson
 
@@ -277,7 +255,6 @@ Principle:
 
 ---
 
-
 # Private VLANs: the problem
 
 Regular VLANs separate broadcast domains, but hosts **inside the same VLAN** can freely communicate.
@@ -290,12 +267,11 @@ Sometimes that is undesirable:
 
 Private VLANs (PVLANs) add **intra-VLAN isolation** without consuming additional subnets or VLAN IDs.
 
-> Originated as a Cisco feature; now standardized in **IEEE 802.1Q** (isolated/community port concepts).
-
 ---
 
-
 # Private VLAN port types
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -320,35 +296,25 @@ flowchart TB
   H1 x--x H3
 ```
 
+</div>
+
+---
+
+# Private VLAN port types
+
 | Port type | Can talk to |
 |-----------|------------|
 | **Promiscuous** | all ports in the primary VLAN |
 | **Isolated** | promiscuous ports only (not other isolated ports) |
 | **Community** | promiscuous ports + same community (not other communities or isolated) |
 
----
-
-
-# Private VLAN security lesson
-
-PVLANs enforce **Layer-2 microsegmentation within a subnet**:
-
-- single IP subnet, single gateway, yet hosts cannot reach each other;
-- reduces lateral movement without adding firewall rules or extra subnets;
-- the gateway (promiscuous port) must still apply upper-layer policy.
-
-Limitations to understand:
-
-- **Layer-3 bypass**: if a host can route through the gateway and back, PVLAN isolation is defeated — the gateway needs ACLs;
-- PVLANs do not replace authentication or encryption;
-- not all switch platforms implement PVLANs identically.
-
-> Think of PVLANs as **fine-grained access control inside a single broadcast domain**.
+> Not all switch platforms implement PVLANs identically.
 
 ---
-
 
 # Normal DHCP flow
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -363,12 +329,13 @@ sequenceDiagram
   D->>C: DHCP Ack
 ```
 
-DHCP determines more than an IP address: gateway and DNS are especially security-sensitive.
+</div>
 
 ---
 
-
 # Rogue DHCP server
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -378,14 +345,17 @@ flowchart LR
   E --> G["Attacker-controlled gateway / DNS"]
 ```
 
+</div>
+
 The fastest responder may influence the victim unless the infrastructure constrains server responses.
 
 ---
 
-
 # DHCP snooping
 
 Classify ports:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -394,10 +364,11 @@ flowchart LR
   C2["Client"] -->|"untrusted"| S
 ```
 
+</div>
+
 Server-originated DHCP replies are accepted only where they are expected.
 
 ---
-
 
 # DHCP snooping binding table
 
@@ -412,25 +383,29 @@ This table becomes useful to **other Layer-2 security features**.
 
 ---
 
-
 # ARP spoofing
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
   participant V as Victim
   participant A as Attacker
   participant G as Gateway
-  A-->>V: ARP: gateway IP is at attacker MAC
+  A-->>V: ARP reply: gateway IP is at attacker MAC
   V->>A: Traffic intended for gateway
   A->>G: Forward traffic
 ```
+
+</div>
 
 The attacker attempts to place itself in the path.
 
 ---
 
-
 # Dynamic ARP Inspection
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -439,14 +414,17 @@ flowchart LR
   CHECK -->|No| DROP["Drop / log"]
 ```
 
+</div>
+
 A DHCP-derived binding can therefore protect ARP behavior.
 
 ---
 
-
 # IP Source Guard
 
 Another use of the binding table:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -455,28 +433,15 @@ flowchart LR
   C -->|No| D["Drop"]
 ```
 
-This constrains simple source-address impersonation on the local segment.
+</div>
 
 ---
-
-
-# Controls reinforce each other
-
-```mermaid
-flowchart TB
-  DS["DHCP snooping"] --> BT["Binding table"]
-  BT --> DAI["Dynamic ARP Inspection"]
-  BT --> ISG["IP Source Guard"]
-```
-
-This is a small example of **defense in depth using shared infrastructure state**.
-
----
-
 
 # Spanning Tree exists for a reason
 
 Redundant links can create loops.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -485,27 +450,15 @@ flowchart LR
   S3 --> S1
 ```
 
+</div>
+
 STP decides which links should forward so Ethernet does not loop indefinitely.
 
 ---
 
-
-# STP as an attack surface
-
-If an access device can inject influential BPDUs, it may attempt to change topology decisions.
-
-Security questions:
-
-- should an endpoint ever send BPDUs?
-- should an access port become part of topology control?
-- what happens if the root bridge changes unexpectedly?
-
----
-
-
 # BPDU Guard
 
-Concept:
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -514,12 +467,15 @@ flowchart LR
   S --> X["Disable / protect port"]
 ```
 
+</div>
+
 Use it on ports where a switch should **never** legitimately appear.
 
 ---
 
-
 # Broadcast storms
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -528,10 +484,11 @@ flowchart LR
   B --> LINK["Link saturation"]
 ```
 
+</div>
+
 Availability failures at Layer 2 can affect an entire broadcast domain.
 
 ---
-
 
 # Storm control
 
@@ -541,6 +498,10 @@ Storm control is configured **per port**. The switch monitors incoming traffic i
 - **multicast** — group destination MACs;
 - **unknown unicast** — destination MAC not in the forwarding table (flooded).
 
+---
+
+# Storm control
+
 For each class the administrator sets a **threshold**, typically expressed as:
 
 | Unit | Example |
@@ -548,6 +509,10 @@ For each class the administrator sets a **threshold**, typically expressed as:
 | % of link bandwidth | broadcast ≤ 20% of 1 Gbps |
 | packets per second | multicast ≤ 5 000 pps |
 | bits per second | unknown unicast ≤ 100 Mbps |
+
+---
+
+# Storm control
 
 When traffic exceeds the threshold the switch acts:
 
@@ -557,10 +522,7 @@ When traffic exceeds the threshold the switch acts:
 | **Shutdown** | place the port in err-disable state |
 | **Trap / Log** | send SNMP trap or syslog but continue forwarding |
 
-> Shared media resources need limits so one endpoint cannot consume the segment.
-
 ---
-
 
 # Storm control: recovery and operations
 
@@ -572,21 +534,13 @@ Common recovery options:
 - **auto-recovery timer** — the port re-enables after a configured interval (e.g., 300 s);
 - **monitoring integration** — SNMP trap triggers an alert for review.
 
-Operational considerations:
-
-- set thresholds based on **observed baselines**, not arbitrary numbers;
-- different port roles need different limits (server uplink vs end-user access);
-- storm control protects the **switch and segment**, not individual endpoints;
-- a storm on one port can still affect the broadcast domain before the threshold triggers.
-
 > Storm control is a safety valve, not a precision instrument — tune it with real traffic data.
 
 ---
 
-
 # Discovery protocols
 
-Protocols such as LLDP intentionally reveal topology/device information.
+Protocols such as CDP/LLDP intentionally reveal topology/device information.
 
 Questions to ask:
 
@@ -594,16 +548,15 @@ Questions to ask:
 - what inventory information does it expose?
 - can it help operations enough to justify the exposure?
 
-Security and manageability often trade off.
-
 ---
-
 
 # The switch software stack is an attack surface
 
 A switch is a **networked computer** running its own OS, management daemons, and protocol stacks.
 
 Those components can contain exploitable vulnerabilities:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -613,14 +566,17 @@ flowchart LR
   BUG --> DOS["Infrastructure-level DoS"]
 ```
 
+</div>
+
 Real examples:
 
 | CVE | Impact |
 |-----|--------|
-| CVE-2019-1890 | Cisco CDP flaw — remote crash / code execution via crafted CDP frames |
 | CVE-2023-32154 | RouterOS LLDP out-of-bounds write via IPv6 ND — unauthenticated RCE |
 
-Mitigations:
+---
+
+# Switch mitigations
 
 - disable LLDP / CDP on endpoint-facing ports where not needed;
 - keep switch firmware up to date;
@@ -632,16 +588,19 @@ Mitigations:
 
 ---
 
-
 # Management plane security
 
 A switch has two very different roles:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
   DATA["Data plane / forwards frames"]
   MGMT["Management plane / configures device"]
 ```
+
+</div>
 
 Protect management with:
 
@@ -652,20 +611,29 @@ Protect management with:
 
 ---
 
-# Mirror traffic for monitoring
+# Out-of-band vs in-band management
 
-```mermaid
-flowchart LR
-  H1["Host 1"] --> S["OVS"]
-  H2["Host 2"] --> S
-  S -->|"normal"| R["Router"]
-  S -.->|"mirror copy"| IDS["Suricata / tcpdump"]
-```
+| Approach | Pros | Cons |
+|----------|------|------|
+| **OOB** | management reachable even during data plane failure; attack surface isolated | extra cabling, switches, or serial console servers |
+| **In-band** | no extra infrastructure; simpler in small environments | management shares fate with production; exposed to data plane attacks |
 
-This becomes a bridge into the later IDS/IPS lecture.
+Best practice: use **OOB for critical infrastructure**; if in-band is unavoidable, place management in a dedicated VLAN with strict ACLs.
 
 ---
 
+# SNMP security
+
+SNMP (Simple Network Management Protocol) is widely used for monitoring and configuring network devices.
+
+| Version | Authentication | Encryption | Risk |
+|---------|---------------|------------|------|
+| **v1 / v2c** | community string (plaintext) | none | anyone who captures the string has full read/write access |
+| **v3** | username + auth (SHA/HMAC) | optional (AES) | significantly stronger; the only version suitable for production |
+
+> Always use **SNMPv3** with `authPriv` (authentication + encryption);
+
+---
 
 # What should be logged?
 
@@ -683,7 +651,6 @@ Logs are useful only if somebody consumes them.
 
 ---
 
-
 # Physical security still matters
 
 If an attacker can physically reach:
@@ -699,7 +666,6 @@ Dedicated network devices remain **physical systems**.
 
 ---
 
-
 # Fail-open or fail-closed?
 
 Ask this for every control.
@@ -714,63 +680,6 @@ There is no universal answer. Availability and security requirements must be exp
 
 ---
 
-# Common mistakes
-
-- Treating VLANs as complete security policy
-- Treating MAC addresses as trustworthy identity
-- Leaving unused ports active
-- Allowing trunks where they are not required
-- Forgetting the management plane
-- Enabling protections without understanding failure behavior
-- Collecting logs that nobody monitors
-
----
-
-# Control map
-
-| Problem | Typical control |
-|---|---|
-| Rogue DHCP | DHCP snooping |
-| ARP spoofing | DAI |
-| Source IP misuse | IP Source Guard |
-| Unexpected switch | BPDU Guard |
-| Too many MACs | Port security / limits |
-| Broadcast abuse | Storm control |
-| Segment separation | VLANs |
-| Intra-VLAN isolation | Private VLANs |
-| Strong admission decision | NAC / 802.1X |
-
----
-
-# What the switch cannot solve
-
-A switch cannot determine whether:
-
-- an HTTPS request contains SQL injection;
-- a DNS name is malicious;
-- an authenticated user should access a database;
-- malware is hiding in an email attachment.
-
-Higher-layer controls exist because **visibility determines possible decisions**.
-
----
-
-
-# Mental model
-
-```mermaid
-flowchart LR
-  PORT["Physical port"] --> ID["Endpoint identity?" ]
-  ID --> SEG["VLAN / segment"]
-  SEG --> L2["Layer-2 validation"]
-  L2 --> L3["Router / firewall"]
-```
-
-Switch security is the beginning of the chain, not the whole chain.
-
----
-
-
 # Expert augmentation: MACsec at Layer 2
 
 802.1X answers:
@@ -781,11 +690,15 @@ MACsec answers a different question:
 
 > Can someone tap this cable and read or modify frames?
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H[Host or switch] == encrypted Ethernet link ==> S[Switch]
   TAP[Physical tap] -. sees protected frames .-> H
 ```
+
+</div>
 
 MACsec is **hop-by-hop Layer 2 protection**: endpoint-to-switch or switch-to-switch.
 
@@ -793,8 +706,9 @@ It does not replace VLANs, ACLs, NAC, or IPsec.
 
 ---
 
-
 # MACsec: what the hardware changes
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -803,20 +717,13 @@ flowchart LR
   P --> LINK[Physical link]
 ```
 
-Key teaching points:
+</div>
 
 - MACsec uses **AES-GCM** (AES-128-GCM by default, AES-256-GCM optional) for authenticated encryption — confidentiality and integrity in a single pass;
 - encryption and integrity are applied below IP;
 - modern deployments rely on hardware support for line-rate operation;
 - MKA distributes and rotates session keys;
 - unsupported devices silently turn this into a design constraint.
-
-```mermaid
-flowchart TB
-  A[802.1X] -->|admit device| B[Port access]
-  C[MACsec] -->|protect link| D[Frame confidentiality + integrity]
-  E[IPsec] -->|protect routed path| F[Layer 3 tunnel]
-```
 
 ---
 

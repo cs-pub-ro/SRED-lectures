@@ -27,12 +27,16 @@ This lecture connects dedicated network equipment to:
 - audit evidence;
 - design trade-offs.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Devices[Network devices] --> Trust[Trust decisions]
   Trust --> Keys[Cryptographic keys]
   Keys --> Compliance[Compliance evidence]
 ```
+
+</div>
 
 ---
 
@@ -51,6 +55,8 @@ You should be able to:
 
 # The course so far
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   L2[Switches and NAC] --> L3[Routers and firewalls]
@@ -58,6 +64,8 @@ flowchart TB
   App --> VPN[VPNs]
   VPN --> Capstone[Architecture and compliance]
 ```
+
+</div>
 
 Each device answered:
 
@@ -73,12 +81,18 @@ Each device answered:
 
 Individual devices are easy to overvalue.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Box[Security box] -->|bad assumption| Trust[We are secure]
 ```
 
+</div>
+
 Architecture asks:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -88,9 +102,13 @@ flowchart LR
   Evidence --> Review[Continuous improvement]
 ```
 
+</div>
+
 ---
 
 # Old model: castle and moat
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -98,6 +116,8 @@ flowchart LR
   FW --> LAN[Trusted internal network]
   LAN --> Apps[Applications]
 ```
+
+</div>
 
 Assumption:
 
@@ -113,6 +133,8 @@ Common failure:
 
 # Modern reality
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   User[Remote user]
@@ -126,6 +148,8 @@ flowchart TB
   BYOD --> Cloud
   Branch --> Legacy
 ```
+
+</div>
 
 The enterprise boundary is blurred.
 
@@ -143,6 +167,8 @@ It means:
 
 > no implicit trust based solely on network location or asset ownership.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Request[Access request] --> Verify[Authenticate + authorize]
@@ -150,9 +176,13 @@ flowchart LR
   Session --> Monitor[Continuous evaluation]
 ```
 
+</div>
+
 ---
 
 # ZTA reference model
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -162,6 +192,8 @@ flowchart LR
   PA <--> PE[Policy Engine]
   PE <--> Signals[Identity, device, threat intel, policy]
 ```
+
+</div>
 
 Key separation:
 
@@ -173,6 +205,8 @@ Key separation:
 
 # PDP components
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Signals[Input signals] --> PE[Policy Engine]
@@ -180,6 +214,8 @@ flowchart TB
   Decision --> PA[Policy Administrator]
   PA --> Command[Configure session / token / tunnel]
 ```
+
+</div>
 
 Signals may include:
 
@@ -197,6 +233,8 @@ Signals may include:
 
 A PEP can be many things.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   PEP[Policy Enforcement Point]
@@ -208,6 +246,8 @@ flowchart TB
   PEP --> Cloud[Cloud security group]
 ```
 
+</div>
+
 Important point:
 
 > Zero Trust is an architecture, not a single appliance.
@@ -216,11 +256,15 @@ Important point:
 
 # Zero Trust vs NAC
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NAC[NAC] -->|admit device| VLAN[VLAN access]
   ZT[ZTNA] -->|authorize session| App[Application access]
 ```
+
+</div>
 
 NAC is still useful.
 
@@ -235,6 +279,8 @@ ZTNA answers:
 ---
 
 # Microsegmentation
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -253,6 +299,8 @@ flowchart TB
   User -. no direct .-> DB
 ```
 
+</div>
+
 Goal:
 
 > limit lateral movement and reduce blast radius.
@@ -261,6 +309,8 @@ Goal:
 
 # Enforcement locations
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   WorkloadA[Workload A] --> HostPEP[Host firewall / eBPF]
@@ -268,6 +318,8 @@ flowchart LR
   Network --> FW[Firewall]
   FW --> WorkloadB[Workload B]
 ```
+
+</div>
 
 Microsegmentation can be enforced at:
 
@@ -282,6 +334,8 @@ Microsegmentation can be enforced at:
 
 # Identity is not enough
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Identity[Correct user] --> Risk{Safe session?}
@@ -290,6 +344,8 @@ flowchart LR
   App[Allowed app] --> Risk
   Risk --> Decision[Decision]
 ```
+
+</div>
 
 A stolen credential from an unknown device should not equal full access.
 
@@ -309,6 +365,8 @@ Examples:
 - OS supported;
 - not jailbroken/rooted.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Endpoint --> Posture[Posture check]
@@ -316,9 +374,13 @@ flowchart LR
   Posture -->|unhealthy| Remediate[Quarantine / remediation]
 ```
 
+</div>
+
 ---
 
 # Continuous evaluation
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -334,6 +396,8 @@ sequenceDiagram
   P-->>U: Re-authenticate or terminate
 ```
 
+</div>
+
 Zero Trust decisions are not only login-time decisions.
 
 ---
@@ -342,13 +406,19 @@ Zero Trust decisions are not only login-time decisions.
 
 A common mistake:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ZTNA[ZTNA product] --> Flat[Flat internal network]
   Flat --> Risk[Lateral movement remains]
 ```
 
+</div>
+
 Better:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -356,11 +426,15 @@ flowchart LR
   Segment --> Logs[Continuous monitoring]
 ```
 
+</div>
+
 ---
 
 # Where HSMs enter the story
 
 Many network controls depend on private keys.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -376,6 +450,8 @@ flowchart TB
   SASE --> HSM
 ```
 
+</div>
+
 If the key is stolen, the control collapses.
 
 ---
@@ -384,12 +460,16 @@ If the key is stolen, the control collapses.
 
 A Hardware Security Module is a cryptographic boundary.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   App[Application / appliance] -->|request sign/decrypt| HSM[HSM]
   HSM -->|operation result| App
   HSM -. raw private key never leaves .- Key[Private key]
 ```
+
+</div>
 
 The key idea:
 
@@ -398,6 +478,8 @@ The key idea:
 ---
 
 # HSM vs software key store
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -408,6 +490,8 @@ flowchart TB
   API --> Audit[Audit and access control]
 ```
 
+</div>
+
 HSMs reduce key-extraction risk, but do not remove all risk.
 
 Misuse through authorized API access remains possible.
@@ -415,6 +499,8 @@ Misuse through authorized API access remains possible.
 ---
 
 # HSM use case: PKI
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -424,6 +510,8 @@ flowchart TB
   Issuing --> User[User certificates]
   Issuing --> TLS[Server certificates]
 ```
+
+</div>
 
 Network security depends on PKI for:
 
@@ -437,12 +525,16 @@ Network security depends on PKI for:
 
 # HSM use case: TLS inspection
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Client --> Proxy[Inspection proxy]
   Proxy --> HSM[HSM-held subordinate CA key]
   Proxy --> Server[Internet server]
 ```
+
+</div>
 
 Risk question:
 
@@ -454,12 +546,16 @@ This key requires stronger custody than ordinary server keys.
 
 # HSM use case: DNSSEC
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   ZSK[Zone signing key] --> Sign[Sign DNS zone data]
   KSK[Key signing key] --> SignZSK[Sign ZSK]
   KSK --> HSM[HSM protection]
 ```
+
+</div>
 
 DNSSEC improves DNS data authenticity.
 
@@ -471,6 +567,8 @@ HSMs help protect high-value signing keys.
 
 FIPS 140-3 defines security requirements for cryptographic modules.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Module[Cryptographic module] --> Design[Secure design]
@@ -480,6 +578,8 @@ flowchart TB
   Module --> SelfTests[Self-tests]
   Module --> Lifecycle[Lifecycle assurance]
 ```
+
+</div>
 
 It is about the module boundary and assurances, not only algorithms.
 
@@ -502,12 +602,16 @@ Do not reduce FIPS to “uses AES.”
 
 Dedicated equipment is often compromised through management interfaces.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Admin[Admin] --> Mgmt[Management network]
   Mgmt --> Devices[Switches / routers / firewalls]
   Internet -. must not reach .-> Devices
 ```
+
+</div>
 
 Controls:
 
@@ -525,6 +629,8 @@ Controls:
 
 A firewall rule is not only a technical setting.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Req[Requirement] --> Rule[Configuration]
@@ -532,6 +638,8 @@ flowchart LR
   Change --> Test[Test result]
   Test --> Audit[Audit evidence]
 ```
+
+</div>
 
 Students should learn to connect:
 
@@ -557,6 +665,8 @@ For network equipment, useful evidence includes:
 - backup and restore tests;
 - incident records.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   ISMS[ISMS] --> Controls[Controls]
@@ -564,11 +674,15 @@ flowchart TB
   Evidence --> Improvement[Improvement cycle]
 ```
 
+</div>
+
 ---
 
 # NIS2: why engineers should care
 
 NIS2 turns security engineering into governance obligations.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -578,11 +692,15 @@ flowchart TB
   Entity --> Governance[Management accountability]
 ```
 
+</div>
+
 Network controls become part of demonstrable risk management.
 
 ---
 
 # NIS2 incident timeline concept
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -592,6 +710,8 @@ sequenceDiagram
   Org->>CSIRT: Incident notification within 72h
   Org->>CSIRT: Final report later
 ```
+
+</div>
 
 Technical implication:
 
@@ -605,11 +725,15 @@ The point is not memorizing fines.
 
 The point is:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   PoorControl[Poor control evidence] --> RegRisk[Regulatory risk]
   RegRisk --> Exec[Executive accountability]
 ```
+
+</div>
 
 Security devices must be:
 
@@ -625,6 +749,8 @@ Security devices must be:
 
 DORA focuses on digital operational resilience for financial entities.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   DORA[DORA] --> Risk[ICT risk management]
@@ -632,6 +758,8 @@ flowchart TB
   DORA --> Testing[Resilience testing]
   DORA --> ThirdParty[ICT third-party risk]
 ```
+
+</div>
 
 Relevant to network equipment:
 
@@ -645,6 +773,8 @@ Relevant to network equipment:
 
 # DORA third-party risk
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Bank[Financial entity] --> Provider[ICT third-party provider]
@@ -654,6 +784,8 @@ flowchart LR
   Bank --> Audit[Audit / inspection rights]
 ```
 
+</div>
+
 Technical dependency becomes a contractual and operational dependency.
 
 ---
@@ -661,6 +793,8 @@ Technical dependency becomes a contractual and operational dependency.
 # Supply-chain question
 
 For every security appliance or cloud security service, ask:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -670,17 +804,23 @@ flowchart TB
   Vendor --> Exit[How do we exit?]
 ```
 
+</div>
+
 This applies to both hardware and SaaS controls.
 
 ---
 
 # Compliance does not equal security
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Compliance[Pass audit] -. not enough .-> Security[Actual security]
   Security --> Evidence[Evidence helps prove control]
 ```
+
+</div>
 
 A compliant but flat, poorly monitored network is still weak.
 
@@ -703,12 +843,16 @@ Design for:
 - regulatory reporting requirements;
 - third-party DDoS and email security.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Users[Users] --> Apps[Applications]
   Attackers[Attackers] --> Edge[Edge controls]
   Regulators[Regulators] --> Evidence[Evidence]
 ```
+
+</div>
 
 ---
 
@@ -731,6 +875,8 @@ The design must support:
 
 # Reference architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Internet --> DDoS[DDoS service]
@@ -750,9 +896,13 @@ flowchart TB
   Mail[Cloud email security] --> Mailbox[Mailbox]
 ```
 
+</div>
+
 ---
 
 # Reference architecture: management plane
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -766,11 +916,15 @@ flowchart TB
   Devices[All devices] --> SIEM[Central logs]
 ```
 
+</div>
+
 No production user subnet should administer infrastructure directly.
 
 ---
 
 # Reference architecture: trust flow
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -787,9 +941,13 @@ sequenceDiagram
   A->>L: app log
 ```
 
+</div>
+
 ---
 
 # Reference architecture: key custody
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -800,6 +958,8 @@ flowchart TB
   HSM --> Inspect[Inspection CA key]
   PKI --> Certs[Device/user/service certificates]
 ```
+
+</div>
 
 Design rule:
 
@@ -825,6 +985,8 @@ For each control:
 
 # Attack path exercise
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Phish[Phishing email] --> Creds[Credential theft]
@@ -833,6 +995,8 @@ flowchart LR
   App --> Lateral[Lateral movement]
   Lateral --> Data[Data exfiltration]
 ```
+
+</div>
 
 Map where controls detect or block:
 
@@ -848,6 +1012,8 @@ Map where controls detect or block:
 
 # Failure analysis exercise
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Failure[Cloud SEG outage] --> MailFlow[Mail flow impact]
@@ -855,6 +1021,8 @@ flowchart TB
   Failure --> Compliance[Reporting implications]
   Failure --> Exit[Fallback plan]
 ```
+
+</div>
 
 Questions:
 
@@ -867,6 +1035,8 @@ Questions:
 
 # Design trade-off: TLS inspection
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Inspect[TLS inspection] --> Benefit[Malware/DLP visibility]
@@ -874,6 +1044,8 @@ flowchart TB
   Inspect --> Cost[Latency/compatibility]
   Inspect --> Exempt[Exemptions]
 ```
+
+</div>
 
 A mature design documents:
 
@@ -887,6 +1059,8 @@ A mature design documents:
 
 # Design trade-off: SASE
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   SASE[SASE provider] --> Global[Global user coverage]
@@ -894,6 +1068,8 @@ flowchart TB
   SASE --> ThirdParty[Third-party dependency]
   SASE --> Data[Data processing location]
 ```
+
+</div>
 
 Questions:
 
@@ -908,6 +1084,8 @@ Questions:
 
 # Design trade-off: PQC readiness
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Inventory[Crypto inventory] --> Priority[Prioritize long-lived data]
@@ -915,6 +1093,8 @@ flowchart LR
   Pilot --> Capacity[Capacity testing]
   Capacity --> Migration[Migration plan]
 ```
+
+</div>
 
 For network devices:
 
@@ -970,6 +1150,8 @@ Students should submit:
 
 # Final mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Architecture --> Placement[Control placement]
@@ -980,6 +1162,8 @@ flowchart TB
   Compliance --> Risk[Risk decisions]
   Risk --> Architecture
 ```
+
+</div>
 
 Security architecture is a loop, not a drawing.
 
@@ -1002,6 +1186,8 @@ Security architecture is a loop, not a drawing.
 
 You now have three layers of understanding:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Device[How each device works]
@@ -1009,6 +1195,8 @@ flowchart TB
   Governance[How architecture is governed]
   Device --> Path --> Governance
 ```
+
+</div>
 
 The expert question is no longer:
 

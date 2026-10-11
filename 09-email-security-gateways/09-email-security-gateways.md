@@ -39,6 +39,8 @@ You should be able to:
 
 # Email delivery path
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   S["Sender"] --> M1["Sending MTA"]
@@ -46,6 +48,8 @@ flowchart LR
   G --> M2["Receiving mail server"]
   M2 --> U["Mailbox"]
 ```
+
+</div>
 
 The gateway is a natural inspection point because email is already relayed between servers.
 
@@ -69,6 +73,8 @@ This gives defenders time to make a richer decision.
 
 # Threat categories
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   MAIL["Incoming email"] --> SPAM["Spam"]
@@ -78,6 +84,8 @@ flowchart TB
   MAIL --> BEC["BEC / impersonation"]
   MAIL --> DLP["Data leakage"]
 ```
+
+</div>
 
 ---
 
@@ -128,12 +136,16 @@ SPF asks approximately:
 
 > Is this sending server authorized to send mail for this envelope domain?
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   M["Sending server IP"] --> R["Receiver"]
   R --> DNS["SPF policy in DNS"]
   DNS --> D{"Authorized?"}
 ```
+
+</div>
 
 ---
 
@@ -152,6 +164,8 @@ It is one signal.
 
 # DKIM concept
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   M["Message fields/body"] --> SIG["Domain signature"]
@@ -159,6 +173,8 @@ flowchart LR
   R --> DNS["Public key in DNS"]
   DNS --> V["Verify signature"]
 ```
+
+</div>
 
 The goal is domain-level integrity/authentication for selected message content.
 
@@ -180,12 +196,16 @@ It does not make the email confidential.
 
 DMARC connects domain alignment with policy.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   SPF["SPF result"] --> D["DMARC alignment"]
   DKIM["DKIM result"] --> D
   D --> P["none / quarantine / reject"]
 ```
+
+</div>
 
 The visible `From:` domain becomes central to the decision.
 
@@ -205,12 +225,16 @@ This reduces simple domain impersonation.
 
 A sensible sequence:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   N["p=none"] --> OBS["Observe reports"]
   OBS --> Q["p=quarantine"]
   Q --> R["p=reject"]
 ```
+
+</div>
 
 Organizations should understand all legitimate senders before strict enforcement.
 
@@ -260,6 +284,8 @@ Rspamd is an open-source mail filtering system that can combine:
 
 # Rspamd pipeline
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   MSG["Message"] --> PARSE["Parse MIME / headers"]
@@ -269,11 +295,15 @@ flowchart LR
   SCORE --> ACT["Deliver / tag / reject"]
 ```
 
+</div>
+
 ---
 
 # MIME structure
 
 Email can contain nested parts:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -282,6 +312,8 @@ flowchart TB
   MSG --> ATT["attachment"]
   ATT --> ZIP["archive"]
 ```
+
+</div>
 
 Security scanners must parse structure, not treat the message as one flat string.
 
@@ -305,10 +337,14 @@ Potential checks:
 
 Nested archives can consume large amounts of CPU/disk.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ZIP1["archive"] --> ZIP2["archive"] --> ZIP3["archive"] --> MANY["many files"]
 ```
+
+</div>
 
 Set limits on nesting, expanded size, and processing time.
 
@@ -332,11 +368,15 @@ A more advanced gateway may execute suspicious files in an isolated environment 
 
 Conceptually:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ATT["Attachment"] --> BOX["Isolated analysis"]
   BOX --> RES["Behavior verdict"]
 ```
+
+</div>
 
 This is useful but operationally expensive and still imperfect.
 
@@ -361,12 +401,16 @@ Gateway analysis may inspect:
 
 A URL may be harmless during delivery and malicious later.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   T1["Delivery time
 benign"] --> CHANGE["Site changes"] --> T2["Click time
 malicious"]
 ```
+
+</div>
 
 This motivates link rewriting or click-time inspection in some products.
 
@@ -407,11 +451,15 @@ Controls may need:
 
 For high-risk requests:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   MAIL["Email requests payment change"] --> VERIFY["Verify through separate channel"]
   VERIFY --> APPROVE["Business approval"]
 ```
+
+</div>
 
 No email gateway can replace strong financial/process controls.
 
@@ -447,6 +495,8 @@ Use context, classification, and review workflows where appropriate.
 
 # Quarantine
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   MSG["Suspicious message"] --> Q["Quarantine"]
@@ -454,6 +504,8 @@ flowchart LR
   REV -->|safe| REL["Release"]
   REV -->|malicious| DEL["Delete / investigate"]
 ```
+
+</div>
 
 Quarantine trades immediate delivery for safer review.
 
@@ -469,11 +521,15 @@ Design the release experience according to severity and user role.
 
 # Inbound vs outbound controls
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> IN["Inbound filtering"] --> MAIL["Mail system"]
   MAIL --> OUT["Outbound filtering"] --> NET
 ```
+
+</div>
 
 Outbound controls matter for:
 
@@ -498,6 +554,8 @@ Postfix is an open-source Mail Transfer Agent suitable for teaching:
 
 # Open-source gateway architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet SMTP"] --> P["Postfix"]
@@ -506,6 +564,8 @@ flowchart LR
   C --> M["Mailbox / downstream MTA"]
   R -.-> LOG["Mail security logs"]
 ```
+
+</div>
 
 Exact integration can differ; the conceptual pipeline is what matters.
 
@@ -544,6 +604,8 @@ Email headers are an investigation trail, not just decoration.
 
 # Mail authentication flow
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant S as Sending MTA
@@ -555,6 +617,8 @@ sequenceDiagram
   Note over R: Evaluate authentication + alignment
   R-->>S: Accept or reject
 ```
+
+</div>
 
 ---
 
@@ -635,6 +699,8 @@ Build a layered message path.
 
 # Possible design
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> P["Postfix"] --> R["Rspamd"] --> AV["ClamAV"] --> Q{"Verdict"}
@@ -642,6 +708,8 @@ flowchart LR
   Q -->|review| QUAR["Quarantine"]
   Q -->|high confidence| REJ["Reject"]
 ```
+
+</div>
 
 ---
 
@@ -675,6 +743,8 @@ Technical and human controls must cooperate.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   RECEIVE["Receive message"] --> AUTH["Authenticate domains"]
@@ -684,18 +754,26 @@ flowchart LR
   SCORE --> ACT["Deliver / quarantine / reject"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: API-based cloud email security
 
 Traditional SEG:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Internet --> MX[Gateway MX] --> Mailbox[Mailbox]
 ```
 
+</div>
+
 API-based cloud inspection:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -703,6 +781,8 @@ flowchart LR
   API --> Detect[phishing / BEC / malware / DLP]
   Detect --> Action[quarantine / retract / warn]
 ```
+
+</div>
 
 Strengths:
 
@@ -716,6 +796,8 @@ Strengths:
 
 Cloud SEG becomes part of your resilience architecture.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Org[Organization] --> Vendor[Cloud email security provider]
@@ -723,6 +805,8 @@ flowchart TB
   Vendor --> Risk[Availability + data access + incident reporting]
   Org --> Exit[Exit strategy and contract controls]
 ```
+
+</div>
 
 Questions for DORA/NIS2-style thinking:
 

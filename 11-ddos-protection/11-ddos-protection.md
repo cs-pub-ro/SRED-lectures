@@ -53,6 +53,8 @@ A perfectly encrypted and authenticated service is still useless when legitimate
 
 # DoS vs DDoS
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["One attacker"] --> V1["Victim"]
@@ -61,11 +63,15 @@ flowchart LR
   B3["Bot 3"] --> V2
 ```
 
+</div>
+
 Distributed attacks combine resources and source diversity.
 
 ---
 
 # Ask: which resource is exhausted?
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -76,6 +82,8 @@ flowchart TB
   D --> APP["Application / database"]
 ```
 
+</div>
+
 Different bottlenecks require different defenses.
 
 ---
@@ -84,10 +92,14 @@ Different bottlenecks require different defenses.
 
 If the access link is 1 Gbit/s and 20 Gbit/s arrives:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["20 Gbit/s attack"] --> LINK["1 Gbit/s link saturated"] --> FW["Local firewall"]
 ```
+
+</div>
 
 The firewall may drop perfectly, but legitimate traffic cannot reach it.
 
@@ -107,11 +119,15 @@ Always measure more than Mbps/Gbps.
 
 Stateful devices maintain finite tables.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   MANY["Many attempted connections"] --> CT["Conntrack / session table"]
   CT --> FULL["State exhaustion"]
 ```
+
+</div>
 
 Targets can include firewalls, load balancers, NAT devices, and servers.
 
@@ -121,10 +137,14 @@ Targets can include firewalls, load balancers, NAT devices, and servers.
 
 A small number of requests may consume expensive backend work.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   REQ["HTTP request"] --> APP["Application"] --> DB["Expensive query"] --> COST["High CPU / DB load"]
 ```
+
+</div>
 
 Bandwidth may look normal while the service fails.
 
@@ -149,6 +169,8 @@ No single threshold protects all layers.
 
 Normal TCP:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant C as Client
@@ -158,6 +180,8 @@ sequenceDiagram
   C->>S: ACK
 ```
 
+</div>
+
 A flood creates many connection attempts without completing normal use.
 
 ---
@@ -166,6 +190,8 @@ A flood creates many connection attempts without completing normal use.
 
 Simplified idea:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   SYN["Incoming SYN"] --> COOKIE["Encode state in SYN/ACK"]
@@ -173,6 +199,8 @@ flowchart LR
   ACK -->|Yes| STATE["Allocate full state"]
   ACK -->|No| NONE["Avoid full state"]
 ```
+
+</div>
 
 This reduces memory pressure from incomplete handshakes.
 
@@ -192,12 +220,16 @@ Defenses depend on whether the UDP service is actually required.
 
 # Reflection
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Attacker sends request
 with spoofed victim source"] --> R["Reflector"]
   R --> V["Victim receives response"]
 ```
+
+</div>
 
 The attacker abuses a third-party service to send traffic toward the victim.
 
@@ -218,11 +250,15 @@ Defensive lessons:
 
 # Anti-spoofing matters upstream
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   BOT["Compromised host"] --> ISP["Source validation"]
   ISP -->|"spoofed source rejected"| X["Attack reduced"]
 ```
+
+</div>
 
 BCP-style source validation benefits the whole Internet, not just one customer.
 
@@ -244,11 +280,15 @@ Prefer targeted limits and required message types.
 
 # HTTP request floods
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   BOTS["Many clients"] --> RP["Reverse proxy"] --> APP["Application"]
   APP --> DB["Database"]
 ```
+
+</div>
 
 Requests may look syntactically valid. Detection may need identity, rate, cost, and behavior context.
 
@@ -270,12 +310,16 @@ Protecting `/` at 1000 req/s does not help if `/search` becomes unavailable at 5
 
 # Rate limiting
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   R["Request"] --> L{"Within rate budget?"}
   L -->|Yes| A["Allow"]
   L -->|No| D["Delay / 429 / drop"]
 ```
+
+</div>
 
 The hard part is deciding the key:
 
@@ -315,10 +359,14 @@ Queues help absorb bursts.
 
 But when arrival rate remains above processing capacity:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   IN["Arrival > service rate"] --> Q["Queue grows"] --> LAT["Latency grows"] --> FAIL["Memory/timeouts/failure"]
 ```
+
+</div>
 
 Bound queues intentionally.
 
@@ -358,10 +406,14 @@ It is useful for labs because students can simulate constrained links and observ
 
 XDP can execute very early in Linux packet reception.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NIC["NIC receives packet"] --> XDP["XDP program"] --> STACK["Linux network stack"]
 ```
+
+</div>
 
 Dropping earlier can reduce CPU cost, but this is an advanced implementation topic.
 
@@ -369,10 +421,14 @@ Dropping earlier can reduce CPU cost, but this is an advanced implementation top
 
 # The upstream problem
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ATT["Attack"] --> ISP["ISP network"] --> LINK["Customer link"] --> LOCAL["Local mitigation"]
 ```
+
+</div>
 
 If `LINK` is saturated, controls after it cannot restore availability.
 
@@ -382,12 +438,16 @@ If `LINK` is saturated, controls after it cannot restore availability.
 
 RTBH intentionally routes attacked traffic to a discard path upstream.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> ISP["Upstream router"]
   ISP -->|"attacked prefix"| BH["Blackhole"]
   ISP -->|"other traffic"| ORG["Organization"]
 ```
+
+</div>
 
 It sacrifices reachability to stop collateral damage.
 
@@ -411,10 +471,14 @@ BGP FlowSpec can distribute more specific traffic-filtering rules through routin
 
 Teach the architectural idea:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   DET["Detection"] --> RULE["Mitigation rule"] --> ROUTERS["Upstream routers"]
 ```
+
+</div>
 
 Do not turn the lecture into BGP FlowSpec syntax.
 
@@ -422,12 +486,16 @@ Do not turn the lecture into BGP FlowSpec syntax.
 
 # Scrubbing center
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet traffic"] --> SCRUB["Scrubbing capacity"]
   SCRUB -->|"clean traffic"| ORG["Service"]
   SCRUB -->|"attack traffic"| DROP["Discard"]
 ```
+
+</div>
 
 Scrubbing must have enough upstream capacity to receive the attack.
 
@@ -461,12 +529,16 @@ Useful telemetry includes:
 
 # Flow telemetry
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   R["Routers / switches"] -->|"flow samples/records"| COL["Collector"]
   COL --> DET["DDoS detection"]
   DET --> RESP["Alert / mitigation"]
 ```
+
+</div>
 
 Flow records summarize conversations without storing every payload.
 
@@ -535,11 +607,15 @@ Rate limits and budgets can therefore be security controls.
 
 Your service may fail because an upstream dependency is attacked:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   USER["Users"] --> APP["Your app"] --> API["Third-party API"]
   ATT["Attack"] --> API
 ```
+
+</div>
 
 Availability architecture must include dependencies.
 
@@ -549,6 +625,8 @@ Availability architecture must include dependencies.
 
 Anycast can announce the same service address from multiple locations.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   U1["Users region A"] --> P1["POP A"]
@@ -557,11 +635,15 @@ flowchart TB
   P2 --> S
 ```
 
+</div>
+
 This can distribute both legitimate load and attacks.
 
 ---
 
 # Lab topology
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -569,6 +651,8 @@ flowchart LR
   R -.-> FLOW["sFlow/NetFlow or counters"]
   FLOW --> FNM["FastNetMon"]
 ```
+
+</div>
 
 Keep generation rates safe and inside an isolated lab.
 
@@ -605,6 +689,8 @@ A DDoS detector should correlate network pressure with user impact.
 
 # Incident response sequence
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   DET["Detect anomaly"] --> CLASS["Classify bottleneck"]
@@ -612,6 +698,8 @@ flowchart LR
   MIT --> VERIFY["Verify service recovery"]
   VERIFY --> TUNE["Tune / document"]
 ```
+
+</div>
 
 Do not jump to blocking without understanding what is actually exhausted.
 
@@ -646,6 +734,8 @@ Design controls for bandwidth, state, and application exhaustion.
 
 # Possible layered design
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> UP["Upstream filtering / RTBH / scrub"] --> EDGE["Edge router"] --> FW["Firewall"] --> RP["Rate-limiting proxy"] --> APP["Application"]
@@ -654,6 +744,8 @@ flowchart LR
   FLOW --> DET["Detection"]
   MET --> DET
 ```
+
+</div>
 
 ---
 
@@ -675,6 +767,8 @@ The goal is controlled degradation, resilience, and timely upstream response.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   OBS["Observe rates + health"] --> BOT["Identify bottleneck"]
@@ -683,11 +777,15 @@ flowchart LR
   LIMIT --> VERIFY["Verify user availability"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: stateless DDoS filtering
 
 State is dangerous under flood.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -695,6 +793,8 @@ flowchart LR
   Stateless -->|drop obvious bad| Drop[Drop]
   Stateless -->|pass likely good| Stateful[Stateful services]
 ```
+
+</div>
 
 DDoS appliances and edge filters try to drop traffic before expensive state is created.
 
@@ -706,12 +806,16 @@ Teaching point:
 
 # Routing integration for scrubbing
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Attack[Internet attack] --> Scrub[Scrubbing center]
   Scrub --> Clean[Clean tunnel / route] --> Site[Protected site]
   Site --> Out[Normal outbound path]
 ```
+
+</div>
 
 Routing mechanisms can divert inbound traffic to a scrubbing service.
 

@@ -39,6 +39,8 @@ You should be able to:
 
 # Three related questions
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   FW["Firewall"] --> Q1["Is the flow allowed?"]
@@ -46,17 +48,23 @@ flowchart LR
   NSM["NSM"] --> Q3["What happened on the network?"]
 ```
 
+</div>
+
 The tools overlap, but the questions are different.
 
 ---
 
 # Passive IDS
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> S["Switch"] --> SV["Server"]
   S -.->|"mirror copy"| IDS["IDS"]
 ```
+
+</div>
 
 Advantages:
 
@@ -69,10 +77,14 @@ Limitation: it usually cannot directly stop the observed packet.
 
 # Inline IPS
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> IPS["Inline IPS"] --> S["Server"]
 ```
+
+</div>
 
 Possible actions:
 
@@ -88,6 +100,8 @@ The security sensor is now also an availability dependency.
 
 # SPAN / mirror port
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H1["Host A"] --> SW["Switch"]
@@ -96,17 +110,23 @@ flowchart LR
   SW -.-> IDS["Mirror destination"]
 ```
 
+</div>
+
 SPAN is convenient but can lose packets under load and depends on correct switch configuration.
 
 ---
 
 # Network TAP
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Segment A"] --> TAP["Network TAP"] --> B["Segment B"]
   TAP -.-> SENSOR["Sensor"]
 ```
+
+</div>
 
 A TAP is purpose-built for observation and can provide more predictable visibility than a switch mirror.
 
@@ -131,12 +151,16 @@ Ask:
 
 Concept:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   T["Traffic"] --> P["Parser"] --> R["Rules"]
   R -->|match| A["Alert / drop"]
   R -->|no match| C["Continue"]
 ```
+
+</div>
 
 A signature looks for known suspicious characteristics.
 
@@ -207,6 +231,8 @@ It is a strong teaching platform because packet, flow, protocol, and rule concep
 
 # Simplified Suricata pipeline
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   PKT["Packets"] --> FLOW["Flow tracking"]
@@ -214,6 +240,8 @@ flowchart LR
   APP --> RULE["Detection rules"]
   RULE --> EVE["EVE JSON / alert"]
 ```
+
+</div>
 
 The real engine is more complex, but this model is enough for architecture reasoning.
 
@@ -255,6 +283,8 @@ The crucial question is always: **what exact behavior causes the alert?**
 
 A connection contains more context than one packet.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant C as Client
@@ -264,6 +294,8 @@ sequenceDiagram
   S-->>C: Response
   Note over C,S: Sensor correlates packets into one flow
 ```
+
+</div>
 
 ---
 
@@ -286,6 +318,8 @@ This can feed malware analysis without making the IDS a full endpoint scanner.
 
 # Alert does not equal incident
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ALERT["Alert"] --> TRIAGE["Triage"]
@@ -293,6 +327,8 @@ flowchart LR
   TRIAGE -->|suspicious| INVEST["Investigate"]
   INVEST --> INCIDENT["Incident if confirmed"]
 ```
+
+</div>
 
 A detection system creates hypotheses, not automatic truth.
 
@@ -348,11 +384,15 @@ Tune by understanding, not merely suppressing noise.
 
 The same alert can have different priority:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   A["Exploit attempt"] --> DEV["Developer test VM"]
   A --> PROD["Production identity server"]
 ```
+
+</div>
 
 Asset importance and exposure should influence triage.
 
@@ -389,6 +429,8 @@ Its strength is **structured network context**.
 
 # Zeek event model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   PKT["Network packets"] --> ANALYZER["Protocol analyzers"]
@@ -396,6 +438,8 @@ flowchart LR
   EVENT --> SCRIPT["Policy scripts"]
   SCRIPT --> LOG["Structured logs"]
 ```
+
+</div>
 
 This differs from thinking only in signatures.
 
@@ -420,6 +464,8 @@ This is foundational investigative context.
 
 A timeline might look like:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant H as Host
@@ -430,6 +476,8 @@ sequenceDiagram
   H->>W: HTTP request
   W-->>H: response with file
 ```
+
+</div>
 
 Zeek can help reconstruct this chain.
 
@@ -465,10 +513,14 @@ Anomaly detection produces leads, not certainty.
 
 # Encrypted traffic
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS"| S["Sensor"] -->|"TLS"| W["Server"]
 ```
+
+</div>
 
 A passive sensor may still observe:
 
@@ -483,12 +535,16 @@ A passive sensor may still observe:
 
 # After TLS termination
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS"| P["Reverse proxy"]
   P -->|"clear or re-encrypted"| APP["Application"]
   P -.-> SENSOR["Sensor after termination"]
 ```
+
+</div>
 
 Sensor placement relative to decryption changes what can be inspected.
 
@@ -527,11 +583,15 @@ An incorrect IDS alert is annoying.
 
 An incorrect IPS decision can cause an outage.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   FP["False positive"] --> IDS["IDS: alert"]
   FP --> IPS["IPS: drop real traffic"]
 ```
+
+</div>
 
 Blocking requires higher confidence and careful change control.
 
@@ -550,11 +610,15 @@ The right answer depends on the protected service.
 
 # Suricata lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ATT["Attacker namespace"] --> SW["OVS / bridge"] --> WEB["Web namespace"]
   SW -.-> SUR["Suricata IDS"]
 ```
+
+</div>
 
 Generate benign and suspicious requests and compare network traffic with alerts.
 
@@ -593,6 +657,8 @@ One packet trace becomes an **investigation timeline**.
 
 # Rule lifecycle
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   CREATE["Create / import rule"] --> TEST["Test"]
@@ -601,6 +667,8 @@ flowchart LR
   MEASURE --> TUNE["Tune / retire"]
   TUNE --> DEPLOY
 ```
+
+</div>
 
 Detection content needs maintenance just like software.
 
@@ -637,6 +705,8 @@ Where would you place sensors, and what would each location reveal?
 
 # Possible sensor placement
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   NET["Internet"] --> FW["Firewall"] --> RP["TLS reverse proxy"] --> APP["App"] --> DB["DB"]
@@ -647,6 +717,8 @@ post-termination"]
   CORE["Internal switch"] -.-> S3["Sensor 3
 east-west"]
 ```
+
+</div>
 
 Different sensors answer different questions.
 
@@ -682,6 +754,8 @@ A perfect alert that nobody responds to has little value.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   SEE["See traffic"] --> PARSE["Parse context"]
@@ -691,11 +765,15 @@ flowchart LR
   TRIAGE --> RESPOND["Respond"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: IDS after TLS 1.3
 
 Passive sensors usually cannot decrypt modern TLS sessions.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -703,6 +781,8 @@ flowchart LR
   C -. metadata copy .-> IDS[Sensor]
   IDS --> META[IP, ports, SNI if visible, timing, sizes]
 ```
+
+</div>
 
 The sensor may lose payload visibility but still keeps useful metadata.
 
@@ -716,6 +796,8 @@ Important shift:
 
 ETA-style detection uses flow features rather than plaintext.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   FLOW[Encrypted flow] --> F1[packet sizes]
@@ -728,6 +810,8 @@ flowchart LR
   F4 --> MODEL
   MODEL --> ALERT[alert / hunt lead]
 ```
+
+</div>
 
 Caution for students:
 

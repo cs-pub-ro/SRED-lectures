@@ -39,6 +39,8 @@ You should be able to:
 
 # Where the router sits
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   LAN1["Users / 10.10.0.0/16"] --> R["Router"]
@@ -46,11 +48,15 @@ flowchart LR
   R --> ISP["Upstream / Internet"]
 ```
 
+</div>
+
 Every routed boundary is an opportunity for policy.
 
 ---
 
 # Forwarding plane vs control plane
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -58,6 +64,8 @@ flowchart TB
   PKT["Incoming packet"] --> FIB
   FIB --> OUT["Outgoing interface"]
 ```
+
+</div>
 
 Security can fail either because the forwarding policy is wrong or because the routing information is wrong.
 
@@ -100,12 +108,16 @@ Security implication: a more specific route can unexpectedly change the path.
 
 # Static routing
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["LAN A"] --> R1["Router 1"]
   R1 --> R2["Router 2"]
   R2 --> B["LAN B"]
 ```
+
+</div>
 
 Static routes are simple and predictable, but operationally difficult at scale.
 
@@ -117,6 +129,8 @@ Predictability is often a security advantage in small environments.
 
 Routers exchange reachability information.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant R1 as Router 1
@@ -125,6 +139,8 @@ sequenceDiagram
   R2->>R1: I can reach network B
   Note over R1,R2: Routing tables adapt automatically
 ```
+
+</div>
 
 Automation creates a new trust problem: **who may influence routing?**
 
@@ -162,6 +178,8 @@ An ACL turns routing into an **enforced path**, not just a reachable path.
 
 # Stateless ACL reasoning
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet"] --> R1{"Rule 1 match?"}
@@ -170,6 +188,8 @@ flowchart LR
   R2 -->|Yes| A2["Action"]
   R2 -->|No| D["Default action"]
 ```
+
+</div>
 
 Ordering matters. The first matching rule often determines the result.
 
@@ -194,11 +214,15 @@ This is easier to reason about than trying to enumerate every dangerous flow.
 
 Packets entering from the Internet should not normally claim internal/private source ranges.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Internet packet / src 10.1.2.3"] --> R["Edge router"]
   R --> X["Drop as implausible source"]
 ```
+
+</div>
 
 The policy uses **where the packet arrived** as part of trust.
 
@@ -223,12 +247,16 @@ Unicast Reverse Path Forwarding asks:
 
 > If I routed a packet back to this source, would the expected path be compatible with where it arrived?
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet from source S"] --> C{"Reverse route plausible?"}
   C -->|Yes| F["Continue"]
   C -->|No| D["Drop / flag"]
 ```
+
+</div>
 
 ---
 
@@ -251,6 +279,8 @@ Topology determines which mode is safe.
 
 Security policy should also constrain outbound traffic.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   DB["Database"] --> R["Router / firewall"]
@@ -258,11 +288,15 @@ flowchart LR
   R -->|"arbitrary SMTP"| X["Drop"]
 ```
 
+</div>
+
 Compromised systems should not automatically have unrestricted Internet access.
 
 ---
 
 # Network segmentation with routing
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -271,17 +305,23 @@ flowchart TB
   M["Management / 10.30.0.0/16"] --> R
 ```
 
+</div>
+
 Segmentation becomes meaningful only when inter-segment flows are explicitly controlled.
 
 ---
 
 # NAT is address translation
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H["10.0.0.5:51000"] --> N["NAT"]
   N --> I["203.0.113.10:62001"]
 ```
+
+</div>
 
 NAT modifies addressing and maintains mappings.
 
@@ -303,11 +343,15 @@ That side effect is useful, but the clean mental model is:
 
 # Source NAT
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["10.0.0.5"] --> N["SNAT"]
   N --> W["203.0.113.10"]
 ```
+
+</div>
 
 Common uses:
 
@@ -321,12 +365,16 @@ Do not confuse hidden addressing with confidentiality.
 
 # Destination NAT
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Internet client"] --> P["203.0.113.10:443"]
   P --> N["DNAT"]
   N --> S["10.20.0.5:443"]
 ```
+
+</div>
 
 Publishing a service through DNAT should always be paired with explicit filtering.
 
@@ -378,12 +426,16 @@ Traffic **to the router** is different from traffic **through the router**.
 
 # Management plane separation
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ADM["Admin workstation"] --> MGMT["Management network"]
   MGMT --> R["Router management IP"]
   USERS["User network"] --> X["No management access"]
 ```
+
+</div>
 
 Keep device administration away from ordinary user paths whenever possible.
 
@@ -405,12 +457,16 @@ The security concept is:
 
 Not every dangerous route is malicious.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Configuration error"] --> BAD["Incorrect advertisement"]
   A["Attacker"] --> BAD
   BAD --> R["Traffic takes wrong path"]
 ```
+
+</div>
 
 Network security must handle **mistakes and adversaries**.
 
@@ -446,6 +502,8 @@ Linux still performs the actual packet forwarding.
 
 # Linux router architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   FRR["FRRouting daemons"] --> K["Linux routing table"]
@@ -453,6 +511,8 @@ flowchart TB
   K --> NF["nftables policy"]
   NF --> OUT["Egress interface"]
 ```
+
+</div>
 
 This separation is pedagogically useful: route learning and packet filtering remain visible.
 
@@ -474,12 +534,16 @@ Students should first prove routing works, then add security controls one at a t
 
 # FRRouting lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H1["Host A"] --> R1["FRR router 1"]
   R1 --> R2["FRR router 2"]
   R2 --> H2["Host B"]
 ```
+
+</div>
 
 Start with static routes, then enable a dynamic protocol and compare the routing tables.
 
@@ -524,12 +588,16 @@ A rule that never increments may be:
 - incorrect;
 - matching the wrong interface/direction.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   TRAFFIC["Test traffic"] --> RULES["ACL rules"]
   RULES --> COUNT["Counters"]
   COUNT --> REASON["Validate mental model"]
 ```
+
+</div>
 
 ---
 
@@ -548,12 +616,16 @@ Always ask in order:
 
 # Packet path exercise
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["10.10.0.25"] --> R1["Router A"]
   R1 --> R2["Router B"]
   R2 --> S["10.20.0.10:443"]
 ```
+
+</div>
 
 Ask students to annotate:
 
@@ -584,6 +656,8 @@ Avoid flooding the SIEM with meaningless packet denies.
 
 Two routers can remove a single point of failure.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   LAN["LAN"] --> R1["Router A"]
@@ -591,6 +665,8 @@ flowchart LR
   R1 --> ISP["Upstream"]
   R2 --> ISP
 ```
+
+</div>
 
 But HA introduces state, routing, and failover complexity. Redundancy is not free.
 
@@ -644,6 +720,8 @@ Requirements:
 
 # One possible policy
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   STU["Students"] -->|"DNS, HTTPS"| R["Router + ACL"]
@@ -652,6 +730,8 @@ flowchart TB
   R --> NET["Internet"]
   STU -.->|"deny"| MGMT["Management"]
 ```
+
+</div>
 
 Students should justify every allowed edge.
 
@@ -672,6 +752,8 @@ Layer-3 policy is necessary but not sufficient.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   LEARN["Learn / configure route"] --> PATH["Choose path"]
@@ -679,6 +761,8 @@ flowchart LR
   POLICY --> NAT["Translate if required"]
   NAT --> SEND["Forward"]
 ```
+
+</div>
 
 Security questions can exist at every stage.
 
@@ -690,6 +774,8 @@ Static ACLs are local and slow to operate during a distributed attack.
 
 BGP FlowSpec distributes traffic-matching rules through the routing control plane.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C[Mitigation controller] --> RR[BGP route reflector]
@@ -698,6 +784,8 @@ flowchart LR
   RR --> R3[Edge router 3]
   R1 --> DROP1[drop / rate-limit / redirect]
 ```
+
+</div>
 
 Example idea:
 
@@ -712,12 +800,16 @@ then rate-limit or discard
 
 Routers forward fast because match rules are pushed into specialized hardware tables.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P[Packet] --> TCAM[TCAM lookup]
   TCAM -->|hit| ACT[Forward / drop / redirect]
   TCAM -->|overflow risk| CPU[slow path / control CPU]
 ```
+
+</div>
 
 Important lesson:
 

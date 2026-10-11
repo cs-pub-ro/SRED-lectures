@@ -39,12 +39,16 @@ You should be able to:
 
 # Why a firewall is not enough
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C1["GET /index.html"] --> FW["Firewall sees TCP/443"]
   C2["Malicious HTTP request"] --> FW
   FW --> W["Both connections may be allowed"]
 ```
+
+</div>
 
 Layer-4 permission does not imply application-layer safety.
 
@@ -74,12 +78,16 @@ Security-relevant fields can exist in:
 
 # WAF placement
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> TLS["TLS termination / reverse proxy"]
   TLS --> WAF["WAF"]
   WAF --> APP["Web application"]
 ```
+
+</div>
 
 The WAF needs access to HTTP semantics. Encrypted traffic must therefore be visible at the inspection point.
 
@@ -88,6 +96,8 @@ The WAF needs access to HTTP semantics. Encrypted traffic must therefore be visi
 # Reverse proxy WAF
 
 The cleanest conceptual model:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -100,6 +110,8 @@ sequenceDiagram
   A-->>W: Response
   W-->>C: Response
 ```
+
+</div>
 
 ---
 
@@ -217,6 +229,8 @@ Strict parsing can reduce ambiguity between intermediaries and backends.
 
 The same logical input can have multiple encodings.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   RAW["Raw request"] --> DECODE["Decode / normalize"]
@@ -224,17 +238,23 @@ flowchart LR
   PARSE --> RULES["Apply rules"]
 ```
 
+</div>
+
 Rules should inspect the same semantic value the application will process.
 
 ---
 
 # Parser disagreement
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   REQ["Ambiguous HTTP request"] --> P1["Proxy interpretation A"]
   REQ --> P2["Backend interpretation B"]
 ```
+
+</div>
 
 If intermediaries disagree, attackers may exploit the gap.
 
@@ -305,6 +325,8 @@ Important teaching point:
 
 Simplified model:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   R["Request"] --> M1["Rule match +5"]
@@ -314,6 +336,8 @@ flowchart LR
   T -->|Yes| B["Block"]
   T -->|No| A["Allow"]
 ```
+
+</div>
 
 ---
 
@@ -336,6 +360,8 @@ Scoring supports:
 
 Recommended deployment sequence:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   D["Detect only"] --> O["Observe real traffic"]
@@ -343,6 +369,8 @@ flowchart LR
   T --> B["Enable blocking"]
   B --> M["Monitor continuously"]
 ```
+
+</div>
 
 Blocking before observing can break legitimate applications.
 
@@ -398,11 +426,15 @@ WAF ≠ secure application.
 
 # Virtual patching
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   V["Known vulnerable endpoint"] --> W["WAF blocks exploit pattern"]
   W --> APP["Application still needs patch"]
 ```
+
+</div>
 
 Virtual patches can buy time, but should not become permanent excuses to leave vulnerable code unchanged.
 
@@ -427,10 +459,14 @@ These may need rate, identity, and behavior controls rather than classic signatu
 
 A WAF sees HTTP, but often lacks complete business identity context.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Authenticated user"] --> WAF["WAF"] --> APP["Application authorization"]
 ```
+
+</div>
 
 The application still decides whether that user may access a specific object or action.
 
@@ -485,12 +521,16 @@ A WAF can contribute signals, but bot management is often a broader behavior/ide
 
 # TLS dependency
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS"| RP["Reverse proxy terminates TLS"]
   RP --> WAF["HTTP inspection"]
   WAF --> APP["Application"]
 ```
+
+</div>
 
 If TLS passes through untouched, an external WAF cannot inspect the encrypted HTTP payload.
 
@@ -500,10 +540,14 @@ If TLS passes through untouched, an external WAF cannot inspect the encrypted HT
 
 TLS can be re-established after inspection.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS"| W["WAF / proxy"] -->|"TLS"| A["Backend"]
 ```
+
+</div>
 
 Inspection and internal encryption are not mutually exclusive.
 
@@ -524,11 +568,15 @@ The application should accept these values only from trusted proxy paths, not ar
 
 # WAF bypass path
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> WAF["WAF"] --> APP["Application"]
   NET -.->|"direct backend exposure"| APP
 ```
+
+</div>
 
 If the backend is directly reachable, the WAF may be irrelevant.
 
@@ -538,12 +586,16 @@ Architecture must enforce the inspection path.
 
 # Open-source lab architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> N["NGINX/Apache + ModSecurity"]
   N --> CRS["OWASP CRS"]
   CRS --> APP["Training app"]
 ```
+
+</div>
 
 Run the application and WAF in separate containers so the boundary is visible.
 
@@ -623,10 +675,14 @@ Measure latency and throughput before treating the WAF as free.
 
 If the WAF is inline, bad policy can block production.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   GOOD["Legitimate traffic"] --> W["WAF misconfiguration"] --> X["Blocked"]
 ```
+
+</div>
 
 Detection quality and change management directly affect availability.
 
@@ -654,6 +710,8 @@ Which paths need:
 
 # Possible layered design
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> RP["TLS reverse proxy"] --> WAF["ModSecurity + CRS"]
@@ -662,6 +720,8 @@ flowchart LR
   WAF -.-> LOG["Security logs"]
   APP -.-> LOG
 ```
+
+</div>
 
 Compare WAF evidence with application logs during investigations.
 
@@ -697,6 +757,8 @@ It cannot replace:
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   HTTP["HTTP request"] --> NORM["Normalize / parse"]
@@ -706,11 +768,15 @@ flowchart LR
   SCORE -->|block| RESP["Reject + log"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: WAF becomes API gateway
 
 Modern WAFs inspect more than form parameters.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -720,6 +786,8 @@ flowchart LR
   WAF --> AUTHZ[API authorization hints]
   WAF --> API[Backend API]
 ```
+
+</div>
 
 Useful checks:
 
@@ -735,6 +803,8 @@ Useful checks:
 
 LLM-backed applications create new inspection problems.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Prompt[User prompt] --> Gateway[AI security gateway]
@@ -743,6 +813,8 @@ flowchart TB
   Gateway --> Limits[Size and timeout limits]
   Gateway --> Model[LLM application]
 ```
+
+</div>
 
 Operational warning:
 

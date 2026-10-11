@@ -39,12 +39,16 @@ You should be able to:
 
 # Where DNS fits
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> R["Recursive resolver"]
   R --> A["Authoritative DNS"]
   C -->|"after answer"| S["Destination service"]
 ```
+
+</div>
 
 DNS often runs **before** the application connection, making it an early enforcement opportunity.
 
@@ -53,6 +57,8 @@ DNS often runs **before** the application connection, making it an early enforce
 # Stub resolver vs recursive resolver
 
 The endpoint usually asks a configured recursive resolver.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -64,6 +70,8 @@ sequenceDiagram
   DNS-->>R: Answer
   R-->>C: Answer
 ```
+
+</div>
 
 ---
 
@@ -84,11 +92,15 @@ Security implications:
 
 If an attacker can influence DNS answers, users may be redirected without changing the URL they typed.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   U["User requests bank.example"] --> DNS["Compromised DNS answer"]
   DNS --> BAD["Attacker IP"]
 ```
+
+</div>
 
 TLS can still provide an additional identity check if certificates are validated.
 
@@ -125,6 +137,8 @@ No need for signature mathematics.
 
 A security resolver can apply policy before returning an answer.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client query"] --> R["Secure resolver"]
@@ -132,6 +146,8 @@ flowchart LR
   P -->|Allowed| DNS["Normal resolution"]
   P -->|Blocked| B["NXDOMAIN / sinkhole / drop"]
 ```
+
+</div>
 
 ---
 
@@ -167,6 +183,8 @@ The resolver modifies the answer according to policy.
 
 # RPZ decision path
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Q["DNS query"] --> MATCH{"RPZ match?"}
@@ -177,11 +195,15 @@ flowchart LR
   ACT --> SINK["Sinkhole answer"]
 ```
 
+</div>
+
 ---
 
 # Sinkholing
 
 Instead of resolving a malicious domain to the real attacker infrastructure:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -189,6 +211,8 @@ flowchart LR
   DNS --> SINK["Internal sinkhole"]
   SINK --> SOC["Log / identify source"]
 ```
+
+</div>
 
 A sinkhole can convert attempted compromise into useful detection.
 
@@ -213,6 +237,8 @@ Blocking is sometimes safer than impersonating the destination.
 
 A common pattern:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant M as Malware
@@ -222,6 +248,8 @@ sequenceDiagram
   D-->>M: IP address
   M->>C: connect
 ```
+
+</div>
 
 Blocking the domain can interrupt the chain before the C2 connection.
 
@@ -245,12 +273,16 @@ These are probabilistic signals. Legitimate new domains exist too.
 
 Some malware generates many candidate domains.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   M["Malware"] --> D1["abc123.example"]
   M --> D2["qwe987.example"]
   M --> D3["mno456.example"]
 ```
+
+</div>
 
 Defenders may look for volume, lexical patterns, rarity, and failed lookups.
 
@@ -273,11 +305,15 @@ Detection should combine DNS behavior with endpoint/asset context.
 
 DNS can carry more than normal hostnames.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   HOST["Compromised host"] --> Q["encoded-data.attacker.example"]
   Q --> DNS["Recursive DNS"] --> AUTH["Attacker authoritative server"]
 ```
+
+</div>
 
 The attacker abuses allowed DNS as a covert channel.
 
@@ -310,12 +346,16 @@ Therefore egress policy should consider **which DNS resolvers are allowed**, not
 
 # Force clients through approved resolvers
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"DNS allowed"| R["Corporate resolver"]
   C -.->|"direct DNS blocked"| X["Internet resolvers"]
   R --> DNS["Internet DNS"]
 ```
+
+</div>
 
 Centralization improves both policy and visibility.
 
@@ -341,10 +381,14 @@ Blocking all TCP/53 can cause subtle failures.
 
 DNS over TLS encrypts DNS traffic between client and resolver.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS protected DNS"| R["DoT resolver"]
 ```
+
+</div>
 
 Benefits privacy against on-path observers, but can reduce visibility for intermediary security devices.
 
@@ -354,10 +398,14 @@ Benefits privacy against on-path observers, but can reduce visibility for interm
 
 DNS over HTTPS carries DNS inside HTTPS.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Browser / OS"] -->|"HTTPS :443"| R["DoH resolver"]
 ```
+
+</div>
 
 A port-based control may see only HTTPS, not obvious DNS.
 
@@ -381,11 +429,15 @@ The architectural question is not “DoH good or bad?” but:
 
 Different clients may receive different answers.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   INT["Internal client"] --> R["Resolver"] --> A1["app.example = 10.0.0.10"]
   EXT["External client"] --> PUB["Public DNS"] --> A2["app.example = 203.0.113.10"]
 ```
+
+</div>
 
 Useful, but increases troubleshooting complexity.
 
@@ -420,10 +472,14 @@ A full zone can reveal many internal/external names.
 
 An open recursive resolver can be abused by outsiders and may contribute to amplification attacks.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet attacker"] --> R["Open resolver"] --> V["Victim"]
 ```
+
+</div>
 
 Recursive service should be restricted to intended clients.
 
@@ -486,6 +542,8 @@ Unbound is a validating recursive resolver suitable for:
 
 # Unbound security architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Clients"] --> U["Unbound"]
@@ -494,6 +552,8 @@ flowchart LR
   CACHE --> DNS["DNS hierarchy"]
   U -.-> LOG["DNS logs"]
 ```
+
+</div>
 
 ---
 
@@ -514,6 +574,8 @@ Students should observe the change in resolver response.
 
 # Lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C1["Client 1"] --> U["Unbound + RPZ"]
@@ -521,6 +583,8 @@ flowchart LR
   U --> AUTH["Lab authoritative DNS"]
   U -.-> Z["Zeek / query logs"]
 ```
+
+</div>
 
 Everything can run in containers or namespaces.
 
@@ -540,10 +604,14 @@ Everything can run in containers or namespaces.
 
 # Zeek DNS visibility
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   TRAF["DNS traffic"] --> Z["Zeek"] --> LOG["dns.log"]
 ```
+
+</div>
 
 Students can correlate:
 
@@ -556,12 +624,16 @@ Students can correlate:
 
 # DNS + firewall integration
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> R["Approved DNS resolver"]
   C -.->|"block other DNS"| FW["Firewall"]
   R --> NET["Internet DNS"]
 ```
+
+</div>
 
 The DNS control is stronger when the network prevents easy bypass.
 
@@ -608,6 +680,8 @@ Draw the resolver and firewall relationships.
 
 # Possible design
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   USERS["Managed clients"] --> U["Unbound security resolver"]
@@ -617,6 +691,8 @@ flowchart TB
   USERS -.->|"direct external DNS blocked"| X["Other resolvers"]
   U -.-> LOG["Security analytics"]
 ```
+
+</div>
 
 ---
 
@@ -636,6 +712,8 @@ It is an early control, not a complete web security solution.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Q["Name query"] --> TRUST["Trusted resolver?"]
@@ -645,11 +723,15 @@ flowchart LR
   ANSWER --> CONNECT["Application connection"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: encrypted DNS evasion
 
 DNS filtering assumes clients use the enterprise resolver.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -657,6 +739,8 @@ flowchart LR
   C -. DoH over 443 .-> EXT[External DoH resolver]
   R --> POLICY[RPZ / logging / sinkhole]
 ```
+
+</div>
 
 DoH and DoT can bypass local DNS controls if unmanaged.
 
@@ -673,6 +757,8 @@ Policy choices:
 
 DNSSEC helps validate that DNS data was not forged.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   Root[Root trust anchor] --> TLD[TLD signed zone]
@@ -680,13 +766,19 @@ flowchart TB
   Zone --> Record[Validated DNS answer]
 ```
 
+</div>
+
 Do not confuse:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
   DNSSEC[DNSSEC] -->|authenticity| A[Is this answer valid?]
   RPZ[DNS policy] -->|security filtering| B[Should we allow this domain?]
 ```
+
+</div>
 
 They solve different problems.
 

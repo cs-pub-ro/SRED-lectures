@@ -39,12 +39,16 @@ You should be able to:
 
 # The basic problem
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   U["Unknown laptop"] --> P["Wall port"]
   P --> S["Switch"]
   S --> LAN["Corporate LAN"]
 ```
+
+</div>
 
 Should plugging in a cable immediately grant normal internal access?
 
@@ -54,6 +58,8 @@ A secure enterprise usually wants an **admission decision** first.
 
 # NAC as a decision point
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   D["Device connects"] --> I["Identify / authenticate"]
@@ -62,17 +68,23 @@ flowchart LR
   A --> M["Monitor / re-evaluate"]
 ```
 
+</div>
+
 NAC combines identity, network control, and policy.
 
 ---
 
 # Three 802.1X roles
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   SUP["Supplicant / endpoint"] --> AUTH["Authenticator / switch/AP"]
   AUTH --> AAA["Authentication server / RADIUS"]
 ```
+
+</div>
 
 Remember the roles, not vendor names.
 
@@ -98,12 +110,16 @@ The switch or AP controls the edge port.
 
 Before successful authentication, it can permit only traffic needed for the authentication process.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   PC["Endpoint"] --> S["Controlled port"]
   S -->|"before auth"| X["Limited access"]
   S -->|"after auth"| LAN["Authorized network"]
 ```
+
+</div>
 
 ---
 
@@ -122,6 +138,8 @@ The network device does not need to store every enterprise credential.
 
 # 802.1X message path
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant E as Endpoint
@@ -132,6 +150,8 @@ sequenceDiagram
   R-->>S: Access-Accept / Reject
   S-->>E: Port authorized or denied
 ```
+
+</div>
 
 The authenticator relays the decision into network access.
 
@@ -169,6 +189,8 @@ noncompliant PC   -> quarantine
 
 # Dynamic VLAN assignment
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   R["RADIUS decision"] --> E{"Identity / role"}
@@ -177,6 +199,8 @@ flowchart TB
   E -->|IoT| V60["VLAN 60"]
   E -->|Risk| Q["Quarantine"]
 ```
+
+</div>
 
 The physical socket no longer defines the full trust level.
 
@@ -228,12 +252,16 @@ For this lecture, the important security questions are:
 
 # Certificate-based access
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   DEV["Managed device / certificate"] --> NAC["802.1X / NAC"]
   NAC --> CA["Trusted certificate chain"]
   NAC --> POL["Managed-device policy"]
 ```
+
+</div>
 
 Certificates can provide stronger machine identity than MAC addresses.
 
@@ -272,12 +300,16 @@ NAC still needs a way to classify them.
 
 # MAC Authentication Bypass
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   IOT["Printer / MAC X"] --> SW["Switch"]
   SW --> RAD["RADIUS lookup / MAC X"]
   RAD --> POL["Printer VLAN / policy"]
 ```
+
+</div>
 
 MAB improves manageability, but the MAC address remains spoofable.
 
@@ -297,6 +329,8 @@ Do not present it as cryptographic proof of device identity.
 
 # Guest access
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   G["Guest device"] --> NAC["NAC"]
@@ -304,6 +338,8 @@ flowchart LR
   PORTAL --> GV["Guest VLAN"]
   GV --> NET["Internet only"]
 ```
+
+</div>
 
 Guest access should not imply internal trust.
 
@@ -325,12 +361,16 @@ Modern HTTPS behavior can also make interception-based portal workflows awkward.
 
 # Quarantine network
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   D["Risky endpoint"] --> Q["Quarantine VLAN"]
   Q --> FIX["Update / remediation services"]
   Q -.-> X["No normal internal access"]
 ```
+
+</div>
 
 Quarantine is valuable only if there is a realistic recovery path.
 
@@ -370,6 +410,8 @@ Graduated access can improve usability and resilience.
 
 # Wired NAC
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   PC["Laptop"] --> SW["Access switch"]
@@ -377,11 +419,15 @@ flowchart LR
   SW --> LAN["Assigned VLAN / ACL"]
 ```
 
+</div>
+
 The switch is the enforcement point.
 
 ---
 
 # Wireless NAC
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -389,6 +435,8 @@ flowchart LR
   AP --> R["RADIUS / PacketFence"]
   AP --> WLAN["Role / VLAN / policy"]
 ```
+
+</div>
 
 The same AAA concepts can apply even though the access medium changes.
 
@@ -400,12 +448,16 @@ NAC does not replace segmentation.
 
 It helps decide **which segment or role** an endpoint should receive.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ID["Identity decision"] --> SEG["Segment / role"]
   SEG --> FW["Firewall policy"]
   FW --> APP["Applications"]
 ```
+
+</div>
 
 ---
 
@@ -444,6 +496,8 @@ PacketFence provides open-source NAC capabilities including:
 
 # PacketFence architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   END["Endpoints"] --> NET["Switches / APs"]
@@ -454,6 +508,8 @@ flowchart TB
   PF --> NET
 ```
 
+</div>
+
 It is useful for teaching because the control relationships are visible.
 
 ---
@@ -462,17 +518,23 @@ It is useful for teaching because the control relationships are visible.
 
 FreeRADIUS can also be used independently for a smaller teaching lab.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   SW["Authenticator"] --> FR["FreeRADIUS"]
   FR --> USERS["Local users / LDAP / cert policy"]
 ```
 
+</div>
+
 Start small before introducing a full NAC platform.
 
 ---
 
 # Lab topology
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -481,6 +543,8 @@ flowchart LR
   OVS --> PF["PacketFence / FreeRADIUS"]
   OVS --> R["Router / firewall"]
 ```
+
+</div>
 
 The goal is to observe different access decisions for different endpoint identities.
 
@@ -501,6 +565,8 @@ Make the **state transition** visible.
 
 # NAC state machine
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 stateDiagram-v2
   [*] --> Unknown
@@ -511,6 +577,8 @@ stateDiagram-v2
   Authenticating --> Denied: reject
   Quarantine --> Authorized: remediated
 ```
+
+</div>
 
 ---
 
@@ -531,12 +599,16 @@ This is an availability design decision, not merely a configuration checkbox.
 
 # Failure: certificate expired
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   DEV["Managed device"] --> CERT{"Certificate valid?"}
   CERT -->|Yes| ACCESS["Normal access"]
   CERT -->|No| REC["Restricted remediation"]
 ```
+
+</div>
 
 A strong identity system still needs lifecycle management.
 
@@ -551,10 +623,14 @@ Always separate:
 - policy decision point;
 - policy enforcement point.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   PDP["Policy decision"] --> PEP["Switch/AP enforcement"]
 ```
+
+</div>
 
 ---
 
@@ -636,6 +712,8 @@ Keep the policy understandable enough to operate.
 
 # Possible role model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   AUTH["NAC decision"] --> STAFF["Staff"]
@@ -644,6 +722,8 @@ flowchart TB
   AUTH --> GUEST["Guests"]
   AUTH --> QUAR["Quarantine"]
 ```
+
+</div>
 
 Each role should map to downstream firewall policy.
 
@@ -677,6 +757,8 @@ Admission is one control in a larger system.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   CONNECT["Connect"] --> AUTH["Authenticate / identify"]
@@ -686,6 +768,8 @@ flowchart LR
   ENFORCE --> DOWN["Firewall / app policy"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: NAC to Zero Trust
@@ -694,12 +778,16 @@ Traditional NAC often grants network reachability after admission.
 
 Zero Trust changes the unit of decision:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   U[User + device] --> PDP[Policy decision point]
   PDP --> PEP[Policy enforcement point]
   PEP --> APP[Single application]
 ```
+
+</div>
 
 Decision inputs can include:
 
@@ -715,6 +803,8 @@ Decision inputs can include:
 
 Instead of exposing a whole subnet:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   USER[User] --> ZTNA[ZTNA enforcement]
@@ -722,6 +812,8 @@ flowchart LR
   ZTNA -. blocked .-> DB[Database subnet]
   ZTNA -. hidden .-> SCAN[Network scanning]
 ```
+
+</div>
 
 NAC remains useful at the access edge.
 

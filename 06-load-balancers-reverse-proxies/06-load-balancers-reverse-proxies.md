@@ -39,6 +39,8 @@ You should be able to:
 
 # Basic architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Clients"] --> LB["Load balancer"]
@@ -46,6 +48,8 @@ flowchart LR
   LB --> W2["Web 2"]
   LB --> W3["Web 3"]
 ```
+
+</div>
 
 Clients see one service endpoint while the load balancer manages multiple backends.
 
@@ -73,17 +77,23 @@ An L4 balancer primarily reasons about:
 - TCP/UDP ports;
 - connection tuples.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TCP/443"| LB["L4 LB"]
   LB -->|"connection"| B["Backend"]
 ```
 
+</div>
+
 ---
 
 # Layer 7 load balancing
 
 An L7 proxy understands application semantics.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -93,11 +103,15 @@ flowchart LR
   RP -->|"/admin"| ADM["Admin pool"]
 ```
 
+</div>
+
 ---
 
 # Reverse proxy concept
 
 The proxy terminates one connection and creates another.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -109,6 +123,8 @@ sequenceDiagram
   B-->>P: Backend response
   P-->>C: Client response
 ```
+
+</div>
 
 This is not simple packet forwarding.
 
@@ -132,6 +148,8 @@ That is much richer than an L3/L4 firewall.
 
 # Round robin
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   R1["Request 1"] --> B1["Backend 1"]
@@ -139,6 +157,8 @@ flowchart LR
   R3["Request 3"] --> B3["Backend 3"]
   R4["Request 4"] --> B1
 ```
+
+</div>
 
 Simple and useful when backends have similar capacity and request cost.
 
@@ -160,17 +180,23 @@ No algorithm perfectly predicts application cost.
 
 # Hash-based selection
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C1["Client A"] --> H["Hash"] --> B1["Backend 1"]
   C2["Client B"] --> H --> B2["Backend 2"]
 ```
 
+</div>
+
 Hashing can provide deterministic affinity, but topology changes may remap clients depending on the algorithm.
 
 ---
 
 # Health checks
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -181,11 +207,15 @@ sequenceDiagram
   Note over L: Keep backend in pool
 ```
 
+</div>
+
 A backend should receive production traffic only while it is considered healthy.
 
 ---
 
 # Failed backend
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -193,6 +223,8 @@ flowchart LR
   LB -.->|"removed"| B2["Backend 2 failed"]
   LB --> B3["Backend 3 healthy"]
 ```
+
+</div>
 
 Health checks turn backend failure into a routing decision.
 
@@ -230,10 +262,14 @@ High availability should not hide operational evidence.
 
 # TLS pass-through
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS"| LB["L4 LB"] -->|"same TLS"| B["Backend"]
 ```
+
+</div>
 
 The load balancer can distribute connections without seeing HTTP content.
 
@@ -241,11 +277,15 @@ The load balancer can distribute connections without seeing HTTP content.
 
 # TLS termination
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS"| LB["TLS termination"]
   LB -->|"HTTP or TLS"| B["Backend"]
 ```
+
+</div>
 
 Now the proxy sees application requests and becomes responsible for private keys and certificate lifecycle.
 
@@ -253,10 +293,14 @@ Now the proxy sees application requests and becomes responsible for private keys
 
 # Re-encryption
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS 1"| LB["Reverse proxy"] -->|"TLS 2"| B["Backend"]
 ```
+
+</div>
 
 Two independent protected connections can preserve confidentiality on both network segments.
 
@@ -283,12 +327,16 @@ Risks:
 
 For HTTPS, the proxy may route based on the requested server name when available.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> LB["Proxy"]
   LB -->|"app.example"| A["App pool"]
   LB -->|"api.example"| P["API pool"]
 ```
+
+</div>
 
 This enables many services behind one address.
 
@@ -318,10 +366,14 @@ Routing policy becomes application-aware.
 
 A backend may otherwise see only the proxy as the source.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client 198.51.100.10"] --> P["Proxy 10.0.0.5"] --> B["Backend sees proxy"]
 ```
+
+</div>
 
 This affects logs, rate limits, and attribution.
 
@@ -345,10 +397,14 @@ The PROXY protocol can transport original connection metadata to a backend at th
 
 Conceptually:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> P["Proxy"] -->|"source metadata + connection"| B["Backend"]
 ```
+
+</div>
 
 Both ends must be configured consistently.
 
@@ -372,6 +428,8 @@ Persistence can reduce balancing quality and complicate failover.
 
 If application state lives outside one web process:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   LB["Load balancer"] --> W1["Web 1"]
@@ -379,6 +437,8 @@ flowchart LR
   W1 --> S["Shared session/data store"]
   W2 --> S
 ```
+
+</div>
 
 then backends become easier to replace and scale.
 
@@ -400,12 +460,16 @@ These controls help protect scarce backend resources.
 
 # Rate limiting
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> RL{"Rate below limit?"}
   RL -->|Yes| APP["Backend"]
   RL -->|No| RESP["Delay / reject"]
 ```
+
+</div>
 
 Rate limits are useful against abuse but need identity and traffic context.
 
@@ -436,11 +500,15 @@ Slow clients should not hold expensive resources forever.
 
 # Slow-request attacks
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Many very slow clients"] --> P["Proxy"]
   P --> R["Connection/resource pressure"]
 ```
+
+</div>
 
 Reasonable timeouts and connection limits reduce exposure before traffic reaches application servers.
 
@@ -462,10 +530,14 @@ can create request-smuggling style problems.
 
 # Trust boundaries between proxies
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> CDN["Edge proxy"] --> LB["Internal HAProxy"] --> APP["App"]
 ```
+
+</div>
 
 Each hop must define:
 
@@ -492,6 +564,8 @@ HAProxy can demonstrate:
 
 # HAProxy architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Clients"] --> FE["Frontend"]
@@ -499,6 +573,8 @@ flowchart LR
   ACL --> BE1["Backend pool A"]
   ACL --> BE2["Backend pool B"]
 ```
+
+</div>
 
 The frontend accepts traffic; backend sections describe destinations.
 
@@ -535,12 +611,16 @@ This is where load balancing becomes application-aware routing.
 
 # HAProxy lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client namespace"] --> H["HAProxy"]
   H --> W1["Web 1"]
   H --> W2["Web 2"]
 ```
+
+</div>
 
 Make backends return their hostname so students can see balancing decisions.
 
@@ -577,10 +657,14 @@ Proxy logs often become a crucial source for application incident investigations
 
 # Reverse proxy as WAF anchor
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Internet"] --> RP["Reverse proxy"] --> WAF["WAF policy"] --> APP["Application"]
 ```
+
+</div>
 
 Often these functions are integrated or adjacent because both require HTTP visibility.
 
@@ -590,10 +674,14 @@ Often these functions are integrated or adjacent because both require HTTP visib
 
 Some architectures place authentication before the application.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> AUTH["Identity-aware proxy"] --> APP["Application"]
 ```
+
+</div>
 
 This is powerful, but application authorization still matters.
 
@@ -617,6 +705,8 @@ Centralization creates both leverage and concentration risk.
 
 # High availability pair
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Clients"] --> VIP["Virtual service IP"]
@@ -625,6 +715,8 @@ flowchart LR
   A --> POOL["Backends"]
   B --> POOL
 ```
+
+</div>
 
 Redundancy should include configuration consistency and failover testing.
 
@@ -660,6 +752,8 @@ Draw the flow before writing HAProxy configuration.
 
 # Possible architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Clients"] --> H["HAProxy
@@ -669,6 +763,8 @@ TLS + routing"]
   H -.-> LOG["Central logs"]
   H -.-> HC["Health checks"]
 ```
+
+</div>
 
 ---
 
@@ -687,6 +783,8 @@ Its position enables security controls, but does not replace them.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ACCEPT["Accept client connection"] --> INSPECT["Inspect L4/L7 context"]
@@ -695,11 +793,15 @@ flowchart LR
   PROTECT --> FORWARD["Create backend connection"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: TLS edge and PQC pressure
 
 TLS termination concentrates cryptographic cost at the edge.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -707,6 +809,8 @@ flowchart LR
   LB --> Web1[Backend 1]
   LB --> Web2[Backend 2]
 ```
+
+</div>
 
 Post-quantum key exchange increases handshake size and computation.
 
@@ -721,6 +825,8 @@ Design impact:
 
 # PQC migration question for reverse proxies
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   A[Classical TLS] --> B[Hybrid TLS]
@@ -731,6 +837,8 @@ flowchart TB
   E --> G[capacity planning]
   F --> G
 ```
+
+</div>
 
 Students should ask:
 

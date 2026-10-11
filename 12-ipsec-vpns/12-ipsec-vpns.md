@@ -39,6 +39,8 @@ You should be able to:
 
 # Why a VPN?
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Office A
@@ -47,6 +49,8 @@ flowchart LR
   GB --> B["Office B
 10.2.0.0/16"]
 ```
+
+</div>
 
 The networks want to communicate as if connected by a protected path.
 
@@ -68,6 +72,8 @@ The application does not need to implement its own VPN logic.
 
 # Layer placement
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   APP["Application protocols"] --> TCP["TCP / UDP"]
@@ -75,11 +81,15 @@ flowchart TB
   IPSEC --> IP["Outer IP forwarding"]
 ```
 
+</div>
+
 IPsec sits at the network layer and can protect many application protocols transparently.
 
 ---
 
 # Two major pieces
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -88,6 +98,8 @@ control plane"] --> SA["Security Associations"]
   SA --> ESP["ESP
 data plane"]
 ```
+
+</div>
 
 Simplify the mental model:
 
@@ -115,11 +127,15 @@ Do not reduce an SA to “the encryption key.”
 
 # SAs are directional
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Gateway A"] -->|"SA A→B"| B["Gateway B"]
   B -->|"SA B→A"| A
 ```
+
+</div>
 
 Bidirectional communication uses protection state for both directions.
 
@@ -168,12 +184,16 @@ Traffic matching these selectors should use the IPsec tunnel.
 
 # Policy decision
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Outbound IP packet"] --> SPD{"Matches protected selectors?"}
   SPD -->|Yes| SA["Use IPsec SA"]
   SPD -->|No| NORMAL["Normal forwarding / other policy"]
 ```
+
+</div>
 
 Routing and IPsec policy must agree.
 
@@ -195,10 +215,14 @@ Do not start by memorizing every field.
 
 # ESP packet concept
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ORIG["Original packet / payload"] --> ESP["ESP protection"] --> OUT["Protected packet on wire"]
 ```
+
+</div>
 
 On the public network, observers see outer routing information but not the protected inner content in tunnel mode.
 
@@ -216,10 +240,14 @@ Keep AH as a comparison, not the center of the lecture.
 
 # Transport mode
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H1["Host A"] -->|"IPsec transport"| H2["Host B"]
 ```
+
+</div>
 
 The original IP header remains the routing header while the transport payload is protected.
 
@@ -229,12 +257,16 @@ Typical mental model: **host-to-host protection**.
 
 # Tunnel mode
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H1["10.1.0.10"] --> G1["Gateway A"]
   G1 -->|"new outer IP + ESP"| G2["Gateway B"]
   G2 --> H2["10.2.0.20"]
 ```
+
+</div>
 
 The entire original IP packet becomes protected inside a new outer packet.
 
@@ -268,6 +300,8 @@ Students should understand:
 
 # IKE high-level flow
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant A as Gateway A
@@ -280,11 +314,15 @@ sequenceDiagram
   A->>B: Create Child SA for protected traffic
 ```
 
+</div>
+
 ---
 
 # IKE SA vs Child SA
 
 Simplified distinction:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -293,6 +331,8 @@ protects control exchange"] --> C1["Child SA
 protects data traffic"]
   IKE --> C2["Additional Child SA"]
 ```
+
+</div>
 
 One authenticated IKE relationship can manage data-protection SAs.
 
@@ -335,12 +375,16 @@ Use unique secrets per relationship where possible.
 
 Certificates scale peer identity better in larger environments.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   CA["Trusted CA"] --> A["Gateway A certificate"]
   CA --> B["Gateway B certificate"]
   A <--> B
 ```
+
+</div>
 
 The VPN then depends on PKI lifecycle and trust configuration.
 
@@ -352,6 +396,8 @@ SAs have lifetimes.
 
 Before expiration, peers establish fresh protection state.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 stateDiagram-v2
   [*] --> ActiveSA
@@ -359,6 +405,8 @@ stateDiagram-v2
   Rekeying --> NewSA
   NewSA --> [*]: old SA retired
 ```
+
+</div>
 
 Rekey failures can look like intermittent network outages.
 
@@ -370,6 +418,8 @@ ESP sequence numbers allow the receiver to detect repeated packets within a wind
 
 Conceptually:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["ESP packet seq N"] --> W{"Fresh in replay window?"}
@@ -377,16 +427,22 @@ flowchart LR
   W -->|Duplicate / too old| D["Drop"]
 ```
 
+</div>
+
 ---
 
 # NAT problem
 
 Traditional IPsec assumptions become complicated when addresses/ports are translated between peers.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["VPN gateway"] --> N["NAT device"] --> B["VPN peer"]
 ```
+
+</div>
 
 Modern IPsec commonly uses NAT traversal to carry ESP-related traffic through NAT-friendly UDP encapsulation.
 
@@ -396,10 +452,14 @@ Modern IPsec commonly uses NAT traversal to carry ESP-related traffic through NA
 
 Conceptual path:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["IPsec peer"] -->|"UDP encapsulated protected traffic"| NAT["NAT"] --> B["IPsec peer"]
 ```
+
+</div>
 
 Students need to recognize UDP/4500 as a common troubleshooting clue, not memorize protocol internals.
 
@@ -421,12 +481,16 @@ The VPN cannot work if upstream firewalls block its control/data traffic.
 
 The IPsec policy directly identifies protected subnets.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet"] --> SEL{"Matches selectors?"}
   SEL -->|Yes| T["IPsec tunnel"]
   SEL -->|No| N["Normal route"]
 ```
+
+</div>
 
 This model is intuitive for simple site-to-site designs.
 
@@ -436,10 +500,14 @@ This model is intuitive for simple site-to-site designs.
 
 A virtual interface represents the tunnel path.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet to 10.2.0.0/16"] --> RT["Routing table"] --> VTI["VPN interface"] --> IPSEC["IPsec protection"]
 ```
+
+</div>
 
 Routing protocols and complex topologies are often easier to integrate this way.
 
@@ -461,12 +529,16 @@ Check:
 
 # Overlapping networks
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Site A
 10.0.0.0/24"] --> VPN["VPN"] --> B["Site B
 10.0.0.0/24"]
 ```
+
+</div>
 
 Identical addressing creates ambiguity.
 
@@ -478,10 +550,14 @@ Possible solutions involve renumbering or carefully designed translation, each w
 
 Encapsulation adds bytes.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   INNER["Inner packet"] --> ENC["IPsec + outer headers"] --> BIG["Larger wire packet"]
 ```
+
+</div>
 
 If path MTU is not handled correctly, some applications may fail while small pings still work.
 
@@ -517,6 +593,8 @@ It is ideal for teaching:
 
 # strongSwan lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   H1["client-a
@@ -528,6 +606,8 @@ strongSwan"]
   G2 --> H2["client-b
 10.2.0.10"]
 ```
+
+</div>
 
 Run everything in containers or namespaces.
 
@@ -584,6 +664,8 @@ or UDP-encapsulated protected traffic with NAT-T.
 
 # Troubleshooting order
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TD
   A["Can peers reach each other? "] --> B["IKE established?"]
@@ -593,6 +675,8 @@ flowchart TD
   E --> F["Firewall permits inner traffic?"]
   F --> G["Return path + MTU okay?"]
 ```
+
+</div>
 
 ---
 
@@ -662,11 +746,15 @@ Requirement: only user-to-service traffic crosses the VPN; management is not exp
 
 # Possible policy
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   U["10.1.0.0/16"] --> G1["Gateway A"] -->|"IPsec"| G2["Gateway B"] --> S["10.2.0.0/16"]
   M["10.1.100.0/24"] -.->|"not selected"| G1
 ```
+
+</div>
 
 Then add firewall rules for the specific applications permitted inside the tunnel.
 
@@ -687,17 +775,23 @@ Then add firewall rules for the specific applications permitted inside the tunne
 
 # Encryption does not equal authorization
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   A["Site A"] -->|"encrypted tunnel"| B["Site B"]
   B --> FW["Internal firewall policy"] --> APP["Application"]
 ```
 
+</div>
+
 IPsec protects transport between peers. It does not decide which internal user should access which application.
 
 ---
 
 # Mental model
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -708,11 +802,15 @@ flowchart LR
   PUBLIC --> PEER["Peer decrypts + forwards inner packet"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: IPsec and quantum migration
 
 Long-lived encrypted traffic can have long-term value.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -720,6 +818,8 @@ flowchart TB
   B --> C[Future cryptanalytic capability]
   C --> D[Decrypt later if key exchange breaks]
 ```
+
+</div>
 
 PQC migration focuses first on key establishment.
 

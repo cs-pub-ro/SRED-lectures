@@ -41,6 +41,8 @@ You should be able to:
 
 # Where the firewall sits
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   NET["Internet"] --> FW["Firewall"]
@@ -48,6 +50,8 @@ flowchart LR
   FW --> INT["Internal"]
   FW --> MGMT["Management"]
 ```
+
+</div>
 
 The firewall becomes a choke point between trust zones.
 
@@ -72,12 +76,16 @@ More advanced firewalls may inspect applications, but keep the fundamentals sepa
 
 Each packet is considered independently.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet"] --> R["Rules"]
   R -->|match allow| A["Forward"]
   R -->|match deny| D["Drop"]
 ```
+
+</div>
 
 No memory of previous packets is required.
 
@@ -99,6 +107,8 @@ This says nothing about whether the packet belongs to an already-established con
 
 # Stateful filtering
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet"] --> CT["Connection tracking"]
@@ -108,6 +118,8 @@ flowchart LR
   ST -->|INVALID| D["Drop"]
 ```
 
+</div>
+
 State turns many packet-level rules into flow-level policy.
 
 ---
@@ -116,6 +128,8 @@ State turns many packet-level rules into flow-level policy.
 
 Simplified view:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 stateDiagram-v2
   [*] --> New
@@ -123,6 +137,8 @@ stateDiagram-v2
   Established --> Closing: FIN/RST
   Closing --> [*]
 ```
+
+</div>
 
 The firewall tracks enough metadata to recognize return traffic.
 
@@ -157,6 +173,8 @@ This state is both useful and a resource an attacker may try to exhaust.
 
 # Zones
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   INET["Internet"] --> FW["Firewall"]
@@ -165,6 +183,8 @@ flowchart TB
   FW --> DB["Database"]
   FW --> MGMT["Management"]
 ```
+
+</div>
 
 Think in **trust zones and required flows**, not just interfaces.
 
@@ -189,12 +209,16 @@ Every allow should have a reason.
 
 # Default deny
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Traffic"] --> E{"Explicitly required?"}
   E -->|Yes| A["Allow"]
   E -->|No| D["Deny"]
 ```
+
+</div>
 
 This reduces dependence on predicting every future attack.
 
@@ -217,12 +241,16 @@ If rule 1 matches first, rule 2 never protects the server from `10.0.0.50`.
 
 A broad earlier rule can make a later rule unreachable.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet"] --> B["Broad allow"]
   B --> A["Accepted"]
   N["Narrow deny below"] -.-> X["Never evaluated"]
 ```
+
+</div>
 
 Policy review should detect shadowing.
 
@@ -258,12 +286,16 @@ Compromise should not automatically equal unrestricted egress.
 
 # East-west filtering
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   APP["App subnet"] --> FW["Internal firewall"]
   FW --> DB["DB subnet"]
   USER["User subnet"] --> FW
 ```
+
+</div>
 
 Perimeter-only security assumes internal networks are trustworthy. Modern environments often need internal segmentation too.
 
@@ -287,12 +319,16 @@ A stateful firewall may permit both because the connection itself is allowed.
 
 # Firewall vs WAF
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> FW["Firewall / IP/port/state"]
   FW --> WAF["WAF / HTTP semantics"]
   WAF --> APP["Application"]
 ```
+
+</div>
 
 Different visibility enables different decisions.
 
@@ -302,6 +338,8 @@ Different visibility enables different decisions.
 
 Keep these concepts distinct:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Packet"] --> NAT["Translate address/port"]
@@ -309,11 +347,15 @@ flowchart LR
   POL --> F["Forward"]
 ```
 
+</div>
+
 Exact processing order depends on implementation, but translation and authorization are separate ideas.
 
 ---
 
 # DNAT publication
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -321,6 +363,8 @@ flowchart LR
   PUB --> FW["DNAT + firewall"]
   FW --> WEB["10.20.0.10:443"]
 ```
+
+</div>
 
 Publishing a destination does not imply every source should reach it.
 
@@ -365,11 +409,15 @@ But investigate persistent invalid traffic before assuming it is malicious; rout
 
 # Asymmetric routing
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> F1["Firewall A"] --> S["Server"]
   S --> F2["Firewall B"] --> C
 ```
+
+</div>
 
 If state exists only on Firewall A, the reply through Firewall B may be dropped.
 
@@ -379,11 +427,15 @@ If state exists only on Firewall A, the reply through Firewall B may be dropped.
 
 Two firewalls may synchronize connection state.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> A["Active firewall"] --> S["Server"]
   A -.->|"state sync"| B["Standby firewall"]
 ```
+
+</div>
 
 High availability adds another security-sensitive channel and failure mode.
 
@@ -450,6 +502,8 @@ It exposes the mechanics without hiding them behind a vendor UI.
 
 # nftables processing model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   IN["Ingress packet"] --> HOOK["Netfilter hook"]
@@ -457,6 +511,8 @@ flowchart TB
   RULES --> CT["conntrack / NAT state"]
   CT --> ROUTE["Forward / local delivery"]
 ```
+
+</div>
 
 Students should understand the flow before memorizing syntax.
 
@@ -491,6 +547,8 @@ Then match the set rather than duplicating addresses across many rules.
 
 # Lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   INET["Internet namespace"] --> FW["Linux firewall"]
@@ -498,6 +556,8 @@ flowchart LR
   FW --> INT["User namespace"]
   FW --> DB["DB namespace"]
 ```
+
+</div>
 
 Students can test every permitted and denied flow directly.
 
@@ -517,6 +577,8 @@ Students can test every permitted and denied flow directly.
 
 # Troubleshooting order
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TD
   A["Packet reaches firewall?"] --> B["Correct route?"]
@@ -526,6 +588,8 @@ flowchart TD
   E --> F["NAT translation?"]
   F --> G["Return path?"]
 ```
+
+</div>
 
 ---
 
@@ -580,11 +644,15 @@ A firewall cannot infer intent from IP/port/state alone.
 
 # Encrypted traffic
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> FW["Firewall"] --> S["Server"]
   C -.->|"TLS payload encrypted"| S
 ```
+
+</div>
 
 The firewall still sees metadata, but application content may be opaque.
 
@@ -618,6 +686,8 @@ Build the smallest understandable policy.
 
 # Possible flow graph
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   NET["Internet"] -->|"443"| WEB["Web DMZ"]
@@ -626,6 +696,8 @@ flowchart TB
   ADM["Admins"] -->|"management"| MGMT["Infrastructure"]
   DB -.->|"deny arbitrary egress"| NET
 ```
+
+</div>
 
 If a flow is not drawn, why should it be allowed?
 
@@ -660,6 +732,8 @@ Other layers exist for those questions.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   Z1["Source zone"] --> CT["Connection state"]
@@ -667,6 +741,8 @@ flowchart LR
   POL --> NAT["Translation if needed"]
   NAT --> Z2["Destination zone"]
 ```
+
+</div>
 
 Always reason about direction and return traffic.
 
@@ -682,6 +758,8 @@ Advanced firewall features are expensive:
 - application identification;
 - logging at high rate.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P[Packet stream] --> FAST[Fast path]
@@ -689,6 +767,8 @@ flowchart LR
   FAST -->|needs inspection| SLOW[Deep inspection path]
   SLOW --> OUT
 ```
+
+</div>
 
 The architecture must prevent the slow path from becoming the bottleneck.
 
@@ -698,6 +778,8 @@ The architecture must prevent the slow path from becoming the bottleneck.
 
 Even with open-source tools, feature choice changes throughput.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   A[nftables rules] --> B[conntrack]
@@ -706,6 +788,8 @@ flowchart TB
   D --> E[TLS proxying]
   E --> F[throughput and latency impact]
 ```
+
+</div>
 
 Teaching experiment:
 

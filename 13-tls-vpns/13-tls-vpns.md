@@ -39,10 +39,14 @@ You should be able to:
 
 # Remote-access problem
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   U["Remote user"] --> NET["Internet"] --> G["VPN gateway"] --> CORP["Corporate network"]
 ```
+
+</div>
 
 The endpoint is outside the trusted network but needs selected internal connectivity.
 
@@ -63,6 +67,8 @@ A VPN gateway can provide:
 
 # TLS-based VPN idea
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["VPN client"] -->|"TLS-authenticated channel"| S["OpenVPN server"]
@@ -70,11 +76,15 @@ flowchart LR
   T --> LAN["Internal routes"]
 ```
 
+</div>
+
 The application carries IP packets through a protected channel.
 
 ---
 
 # OpenVPN architecture
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -83,6 +93,8 @@ flowchart TB
   TUN --> OVPN["OpenVPN client process"]
   OVPN --> NET["UDP/TCP transport over Internet"]
 ```
+
+</div>
 
 OpenVPN runs in user space and connects the virtual interface to the encrypted transport.
 
@@ -106,6 +118,8 @@ Prefer routed designs unless bridging is truly required.
 
 # Routed VPN
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client
@@ -113,6 +127,8 @@ flowchart LR
 10.8.0.1"]
   S --> LAN["10.20.0.0/16"]
 ```
+
+</div>
 
 The client receives routes that send selected private prefixes into the tunnel.
 
@@ -150,10 +166,14 @@ Do not collapse machine and user identity into one concept.
 
 The client should know it reached the intended VPN server.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> CERT["Validate server certificate / trust"] --> S["VPN server"]
 ```
+
+</div>
 
 Otherwise an attacker could attempt to impersonate the remote-access gateway.
 
@@ -195,6 +215,8 @@ This supports:
 
 # MFA
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 sequenceDiagram
   participant U as User
@@ -206,6 +228,8 @@ sequenceDiagram
   V-->>U: VPN session established
 ```
 
+</div>
+
 MFA protects against stolen passwords but not every compromised endpoint.
 
 ---
@@ -213,6 +237,8 @@ MFA protects against stolen passwords but not every compromised endpoint.
 # Control plane and data plane
 
 Conceptually separate:
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -222,11 +248,15 @@ authenticate + negotiate"] --> SESSION["VPN session"]
 carry tunneled packets"]
 ```
 
+</div>
+
 This helps students reason about setup failures vs traffic failures.
 
 ---
 
 # Full tunnel
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -235,17 +265,23 @@ flowchart LR
   V --> NET["Internet"]
 ```
 
+</div>
+
 The organization can enforce web/DNS policy centrally, but consumes more bandwidth.
 
 ---
 
 # Split tunnel
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Remote laptop"] -->|"corporate prefixes"| V["VPN gateway"] --> CORP["Corporate"]
   C -->|"other Internet"| NET["Local Internet path"]
 ```
+
+</div>
 
 This reduces VPN load but creates simultaneous trusted and untrusted paths.
 
@@ -297,12 +333,16 @@ Treat remote-access configuration as high-impact infrastructure.
 
 Remote users often need internal DNS names.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["VPN client"] -->|"DNS through tunnel"| D["Corporate DNS"]
   D --> INT["Internal names"]
   D --> EXT["External resolution"]
 ```
+
+</div>
 
 DNS routing must align with split/full tunnel design.
 
@@ -332,6 +372,8 @@ VPN authenticated = entire internal network
 
 Prefer:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   V["VPN client pool"] --> FW["Internal firewall"]
@@ -340,11 +382,15 @@ flowchart LR
   FW -.-> MGMT["Management denied"]
 ```
 
+</div>
+
 ---
 
 # VPN is another security zone
 
 Treat remote clients as their own zone.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart TB
@@ -353,6 +399,8 @@ flowchart TB
   SRV["Servers"] --> FW
   MGMT["Management"] --> FW
 ```
+
+</div>
 
 Remote access can have narrower policy than office access.
 
@@ -388,10 +436,14 @@ Complement VPN with:
 
 # Lost device
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   LOST["Lost laptop"] --> CRED["VPN certificate/credentials"] --> RISK["Remote access risk"]
 ```
+
+</div>
 
 You need:
 
@@ -435,11 +487,15 @@ Choose based on network constraints, not superstition.
 
 # Why TCP-over-TCP can hurt
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   APP["Inner TCP"] --> VPN["VPN over outer TCP"] --> LOSS["Packet loss"]
   LOSS --> RETRANS["Two reliability layers react"]
 ```
+
+</div>
 
 Independent retransmission/congestion behavior can interact poorly.
 
@@ -449,10 +505,14 @@ Independent retransmission/congestion behavior can interact poorly.
 
 A remote client is commonly behind NAT.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client private IP"] --> NAT["Home/hotel NAT"] --> NET["Internet"] --> V["VPN server"]
 ```
+
+</div>
 
 Client-initiated UDP/TCP sessions make TLS VPNs relatively NAT-friendly.
 
@@ -473,10 +533,14 @@ VPN software needs timers/reconnection behavior that tolerates realistic client 
 
 # MTU and tunnel overhead
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   P["Original packet"] --> ENC["VPN encapsulation"] --> L["Larger outer packet"]
 ```
+
+</div>
 
 Symptoms of MTU problems include working pings but stalled websites or file transfers.
 
@@ -497,12 +561,16 @@ OpenVPN CE gives a clear open-source platform for:
 
 # OpenVPN lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Remote client namespace"] --> NET["Internet namespace"] --> V["OpenVPN server"]
   V --> FW["Internal firewall"] --> APP["Internal app"]
   V --> DNS["Internal DNS"]
 ```
+
+</div>
 
 Use isolated namespaces/containers so route changes are safe.
 
@@ -590,10 +658,14 @@ You should not see the protected private application payload in plaintext.
 
 After decryption, the VPN server still needs to route/firewall the inner packet.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   TUN["tun0 packet"] --> FW["Internal policy"] --> LAN["Corporate LAN"]
 ```
+
+</div>
 
 Encryption does not bypass ordinary network policy.
 
@@ -614,10 +686,14 @@ Routing is preferable when architecture allows clear end-to-end addressing.
 
 # NAT inside remote-access VPN
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["VPN client 10.8.0.10"] --> V["VPN gateway SNAT"] --> APP["Internal app sees gateway address"]
 ```
+
+</div>
 
 This simplifies return routing but reduces direct client attribution downstream.
 
@@ -655,6 +731,8 @@ Peak remote-work events can turn a normally quiet VPN into critical infrastructu
 
 # High availability
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Clients"] --> DNS["VPN service name"]
@@ -663,6 +741,8 @@ flowchart LR
   V1 --> CORP["Internal network"]
   V2 --> CORP
 ```
+
+</div>
 
 HA design must consider session state, routing, certificates, and client reconnect behavior.
 
@@ -684,6 +764,8 @@ Design a split-tunnel policy.
 
 # Possible architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   C["Managed remote laptop"] -->|"MFA + cert"| V["OpenVPN gateway"]
@@ -694,6 +776,8 @@ flowchart TB
   C -->|"normal Internet"| NET["Local ISP"]
   C -->|"internal DNS"| DNS["Corporate DNS via VPN"]
 ```
+
+</div>
 
 ---
 
@@ -744,6 +828,8 @@ It securely extends **connectivity**, which can extend attacker connectivity too
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   AUTH["Authenticate client"] --> SESSION["Establish VPN session"]
@@ -753,11 +839,15 @@ flowchart LR
   FW --> APP["Reach required services"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: PQ TLS VPN latency
 
 Remote-access VPN gateways are sensitive to handshake cost.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -766,6 +856,8 @@ flowchart LR
   GW --> MEM[Buffers]
   GW --> MTU[Fragmentation / retransmission]
 ```
+
+</div>
 
 Hybrid post-quantum TLS can increase handshake size and computation.
 

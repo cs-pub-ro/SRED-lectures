@@ -39,11 +39,15 @@ You should be able to:
 
 # Forward vs reverse proxy
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   C1["Employee"] --> FP["Forward proxy"] --> NET["Internet sites"]
   NET2["Internet clients"] --> RP["Reverse proxy"] --> APP["Our application"]
 ```
+
+</div>
 
 Direction of trust and ownership is the easiest way to remember the difference.
 
@@ -67,10 +71,14 @@ Possible goals:
 
 The client is configured to send web requests to the proxy.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   B["Browser"] -->|"configured proxy"| P["Squid"] --> W["Website"]
 ```
+
+</div>
 
 The client knows a proxy exists.
 
@@ -80,11 +88,15 @@ The client knows a proxy exists.
 
 Without an enforced network policy:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] --> P["Proxy"] --> W["Internet"]
   C -.->|"bypass"| W
 ```
+
+</div>
 
 A proxy policy is weak if clients can simply connect around it.
 
@@ -94,11 +106,15 @@ A proxy policy is weak if clients can simply connect around it.
 
 Common architectural pattern:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"web"| P["Proxy"] --> FW["Egress firewall"] --> NET["Internet"]
   C -.->|"direct 80/443 denied"| FW
 ```
+
+</div>
 
 Proxy and firewall policies reinforce each other.
 
@@ -107,6 +123,8 @@ Proxy and firewall policies reinforce each other.
 # HTTP through a proxy
 
 For plain HTTP, the proxy can receive the full request and create a separate server connection.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -119,11 +137,15 @@ sequenceDiagram
   P-->>C: Response
 ```
 
+</div>
+
 ---
 
 # HTTPS CONNECT
 
 A client can ask the proxy to establish a tunnel.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 sequenceDiagram
@@ -135,6 +157,8 @@ sequenceDiagram
   P-->>C: 200 tunnel established
   C->>W: TLS through tunnel
 ```
+
+</div>
 
 Without interception, the proxy does not see encrypted HTTP content.
 
@@ -176,12 +200,16 @@ unknown category  -> log / review
 
 Instead of only source IP:
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   REQ["Web request"] --> ID["Authenticated user/group"]
   ID --> POL["Proxy policy"]
   POL --> A["Allow / deny"]
 ```
+
+</div>
 
 Identity-aware policy can follow roaming users better than fixed addressing.
 
@@ -204,11 +232,15 @@ Security questions:
 
 A server often needs much narrower egress.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   APP["Application server"] -->|"approved update/API sites"| P["Proxy"]
   APP -.->|"arbitrary web"| X["Denied"]
 ```
+
+</div>
 
 Proxy allowlists can reduce compromise impact.
 
@@ -235,10 +267,14 @@ URL-level inspection generally requires access to the HTTP request, which HTTPS 
 
 # TLS inspection architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"TLS A"| P["Inspection proxy"] -->|"TLS B"| W["Website"]
 ```
+
+</div>
 
 The proxy deliberately becomes a trusted intermediary between client and website.
 
@@ -248,11 +284,15 @@ The proxy deliberately becomes a trusted intermediary between client and website
 
 Managed clients trust a private CA controlled by the organization.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   ORG["Organization CA"] --> C["Client trust store"]
   ORG --> P["Proxy-generated site certificates"]
 ```
+
+</div>
 
 This is a major trust decision, not just a checkbox.
 
@@ -302,6 +342,8 @@ The exact policy depends on legal, privacy, and security requirements.
 
 The proxy must validate the real server certificate correctly.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client trusts proxy"] --> P["Proxy"]
@@ -309,6 +351,8 @@ flowchart LR
   V -->|valid| W["Website"]
   V -->|invalid| X["Block / warn"]
 ```
+
+</div>
 
 Otherwise interception can weaken server authentication.
 
@@ -330,12 +374,16 @@ Large-content inspection requires careful limits to avoid resource exhaustion.
 
 # Malware scanning integration
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   DL["Download"] --> P["Proxy"] --> SCAN["Scanner"]
   SCAN -->|clean| C["Client"]
   SCAN -->|malicious| B["Block"]
 ```
+
+</div>
 
 Inspection latency and file size influence feasibility.
 
@@ -401,11 +449,15 @@ new/unknown -> allow with extra monitoring or restricted downloads
 
 HTTP/3 commonly uses QUIC over UDP.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   B["Browser"] -->|"QUIC / UDP"| W["Website"]
   B -->|"proxy path"| P["Traditional TCP proxy"]
 ```
+
+</div>
 
 Proxy architectures designed around TCP may need explicit policy for QUIC.
 
@@ -421,10 +473,14 @@ This can improve inspection consistency but may reduce performance and should be
 
 # DoH bypass
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client"] -->|"HTTPS"| DOH["External DoH resolver"]
 ```
+
+</div>
 
 A web proxy may see this as ordinary HTTPS unless it identifies or controls the destination/application.
 
@@ -476,6 +532,8 @@ Squid can demonstrate:
 
 # Squid policy flow
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client request"] --> ACL["ACL evaluation"]
@@ -483,6 +541,8 @@ flowchart LR
   ACL -->|deny| DEN["Deny page"]
   CON --> LOG["Access log"]
 ```
+
+</div>
 
 Keep first labs to explicit proxying before adding interception.
 
@@ -505,6 +565,8 @@ Readable policy reinforces the same rule-order lessons as firewalls.
 
 # Lab topology
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   C["Client namespace"] --> P["Squid"] --> W["Lab web server"]
@@ -512,6 +574,8 @@ flowchart LR
   P --> FW
   FW --> W
 ```
+
+</div>
 
 Use a lab web server so everything works offline.
 
@@ -550,10 +614,14 @@ Logs can expose browsing behavior, so access and retention should be governed.
 
 A secure web gateway may know a great deal about users.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   USER["User activity"] --> P["Proxy logs/content"] --> GOV["Retention + access controls"]
 ```
+
+</div>
 
 Security monitoring should not become uncontrolled surveillance.
 
@@ -603,6 +671,8 @@ Requirements:
 
 # Possible architecture
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart TB
   USERS["Employees"] --> SQ["Squid / SWG"]
@@ -612,6 +682,8 @@ flowchart TB
   SERV -.->|"direct denied"| FW
   SQ -.-> LOG["Security logs"]
 ```
+
+</div>
 
 ---
 
@@ -643,6 +715,8 @@ It is an egress control point, not an endpoint replacement.
 
 # Mental model
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   USER["User / server"] --> ID["Identity"]
@@ -652,11 +726,15 @@ flowchart LR
   CONTENT --> NET["Internet"]
 ```
 
+</div>
+
 ---
 
 # Expert augmentation: SWG to SASE
 
 The on-prem proxy model breaks down for distributed users.
+
+<div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
 flowchart LR
@@ -667,6 +745,8 @@ flowchart LR
   POP --> SaaS[SaaS]
   POP --> Private[Private apps]
 ```
+
+</div>
 
 SASE commonly combines:
 
@@ -682,12 +762,16 @@ SASE commonly combines:
 
 TLS inspection creates a sensitive key-management problem.
 
+<div style="transform: scale(0.8); transform-origin: top center;">
+
 ```mermaid
 flowchart LR
   CA[Enterprise inspection CA] --> HSM[HSM / protected key store]
   HSM --> POP[Inspection proxy]
   POP -->|generates leaf certs| Client[Managed clients]
 ```
+
+</div>
 
 Students should ask:
 
