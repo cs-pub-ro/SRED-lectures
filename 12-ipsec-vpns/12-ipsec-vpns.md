@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Office A
 10.1.0.0/16"] --> GA["VPN gateway A"]
@@ -75,6 +76,7 @@ The application does not need to implement its own VPN logic.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   APP["Application protocols"] --> TCP["TCP / UDP"]
   TCP --> IPSEC["IPsec protection"]
@@ -92,6 +94,7 @@ IPsec sits at the network layer and can protect many application protocols trans
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   IKE["IKE
 control plane"] --> SA["Security Associations"]
@@ -130,6 +133,7 @@ Do not reduce an SA to “the encryption key.”
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Gateway A"] -->|"SA A→B"| B["Gateway B"]
   B -->|"SA B→A"| A
@@ -187,6 +191,7 @@ Traffic matching these selectors should use the IPsec tunnel.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Outbound IP packet"] --> SPD{"Matches protected selectors?"}
   SPD -->|Yes| SA["Use IPsec SA"]
@@ -218,6 +223,7 @@ Do not start by memorizing every field.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ORIG["Original packet / payload"] --> ESP["ESP protection"] --> OUT["Protected packet on wire"]
 ```
@@ -243,6 +249,7 @@ Keep AH as a comparison, not the center of the lecture.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H1["Host A"] -->|"IPsec transport"| H2["Host B"]
 ```
@@ -260,6 +267,7 @@ Typical mental model: **host-to-host protection**.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H1["10.1.0.10"] --> G1["Gateway A"]
   G1 -->|"new outer IP + ESP"| G2["Gateway B"]
@@ -303,6 +311,7 @@ Students should understand:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant A as Gateway A
   participant B as Gateway B
@@ -325,6 +334,7 @@ Simplified distinction:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   IKE["IKE SA
 protects control exchange"] --> C1["Child SA
@@ -378,6 +388,7 @@ Certificates scale peer identity better in larger environments.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   CA["Trusted CA"] --> A["Gateway A certificate"]
   CA --> B["Gateway B certificate"]
@@ -399,6 +410,7 @@ Before expiration, peers establish fresh protection state.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 stateDiagram-v2
   [*] --> ActiveSA
   ActiveSA --> Rekeying: lifetime threshold
@@ -421,6 +433,7 @@ Conceptually:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["ESP packet seq N"] --> W{"Fresh in replay window?"}
   W -->|Yes| A["Accept"]
@@ -438,6 +451,7 @@ Traditional IPsec assumptions become complicated when addresses/ports are transl
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["VPN gateway"] --> N["NAT device"] --> B["VPN peer"]
 ```
@@ -455,6 +469,7 @@ Conceptual path:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["IPsec peer"] -->|"UDP encapsulated protected traffic"| NAT["NAT"] --> B["IPsec peer"]
 ```
@@ -484,6 +499,7 @@ The IPsec policy directly identifies protected subnets.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet"] --> SEL{"Matches selectors?"}
   SEL -->|Yes| T["IPsec tunnel"]
@@ -503,6 +519,7 @@ A virtual interface represents the tunnel path.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet to 10.2.0.0/16"] --> RT["Routing table"] --> VTI["VPN interface"] --> IPSEC["IPsec protection"]
 ```
@@ -532,6 +549,7 @@ Check:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Site A
 10.0.0.0/24"] --> VPN["VPN"] --> B["Site B
@@ -553,6 +571,7 @@ Encapsulation adds bytes.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   INNER["Inner packet"] --> ENC["IPsec + outer headers"] --> BIG["Larger wire packet"]
 ```
@@ -596,6 +615,7 @@ It is ideal for teaching:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H1["client-a
 10.1.0.10"] --> G1["gw-a
@@ -667,6 +687,7 @@ or UDP-encapsulated protected traffic with NAT-T.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TD
   A["Can peers reach each other? "] --> B["IKE established?"]
   B --> C["Child SA established?"]
@@ -749,6 +770,7 @@ Requirement: only user-to-service traffic crosses the VPN; management is not exp
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   U["10.1.0.0/16"] --> G1["Gateway A"] -->|"IPsec"| G2["Gateway B"] --> S["10.2.0.0/16"]
   M["10.1.100.0/24"] -.->|"not selected"| G1
@@ -778,6 +800,7 @@ Then add firewall rules for the specific applications permitted inside the tunne
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Site A"] -->|"encrypted tunnel"| B["Site B"]
   B --> FW["Internal firewall policy"] --> APP["Application"]
@@ -794,6 +817,7 @@ IPsec protects transport between peers. It does not decide which internal user s
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ROUTE["Packet needs remote site"] --> SPD["Policy selects IPsec"]
   SPD --> SA["Child SA"]
@@ -813,6 +837,7 @@ Long-lived encrypted traffic can have long-term value.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   A[Intercept encrypted VPN traffic today] --> B[Store now]
   B --> C[Future cryptanalytic capability]

@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   S["Sender"] --> M1["Sending MTA"]
   M1 --> G["Email security gateway"]
@@ -76,6 +77,7 @@ This gives defenders time to make a richer decision.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   MAIL["Incoming email"] --> SPAM["Spam"]
   MAIL --> PHISH["Phishing"]
@@ -139,6 +141,7 @@ SPF asks approximately:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   M["Sending server IP"] --> R["Receiver"]
   R --> DNS["SPF policy in DNS"]
@@ -167,6 +170,7 @@ It is one signal.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   M["Message fields/body"] --> SIG["Domain signature"]
   SIG --> R["Receiver"]
@@ -199,6 +203,7 @@ DMARC connects domain alignment with policy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   SPF["SPF result"] --> D["DMARC alignment"]
   DKIM["DKIM result"] --> D
@@ -228,6 +233,7 @@ A sensible sequence:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   N["p=none"] --> OBS["Observe reports"]
   OBS --> Q["p=quarantine"]
@@ -287,6 +293,7 @@ Rspamd is an open-source mail filtering system that can combine:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   MSG["Message"] --> PARSE["Parse MIME / headers"]
   PARSE --> AUTH["Auth checks"]
@@ -306,6 +313,7 @@ Email can contain nested parts:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   MSG["Message"] --> TEXT["text/plain"]
   MSG --> HTML["text/html"]
@@ -340,6 +348,7 @@ Nested archives can consume large amounts of CPU/disk.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ZIP1["archive"] --> ZIP2["archive"] --> ZIP3["archive"] --> MANY["many files"]
 ```
@@ -371,6 +380,7 @@ Conceptually:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ATT["Attachment"] --> BOX["Isolated analysis"]
   BOX --> RES["Behavior verdict"]
@@ -404,6 +414,7 @@ A URL may be harmless during delivery and malicious later.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   T1["Delivery time
 benign"] --> CHANGE["Site changes"] --> T2["Click time
@@ -454,6 +465,7 @@ For high-risk requests:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   MAIL["Email requests payment change"] --> VERIFY["Verify through separate channel"]
   VERIFY --> APPROVE["Business approval"]
@@ -498,6 +510,7 @@ Use context, classification, and review workflows where appropriate.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   MSG["Suspicious message"] --> Q["Quarantine"]
   Q --> REV["User/admin review"]
@@ -524,6 +537,7 @@ Design the release experience according to severity and user role.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> IN["Inbound filtering"] --> MAIL["Mail system"]
   MAIL --> OUT["Outbound filtering"] --> NET
@@ -557,6 +571,7 @@ Postfix is an open-source Mail Transfer Agent suitable for teaching:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet SMTP"] --> P["Postfix"]
   P --> R["Rspamd"]
@@ -607,6 +622,7 @@ Email headers are an investigation trail, not just decoration.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant S as Sending MTA
   participant R as Receiving gateway
@@ -702,6 +718,7 @@ Build a layered message path.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> P["Postfix"] --> R["Rspamd"] --> AV["ClamAV"] --> Q{"Verdict"}
   Q -->|allow| MB["Mailbox"]
@@ -746,6 +763,7 @@ Technical and human controls must cooperate.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   RECEIVE["Receive message"] --> AUTH["Authenticate domains"]
   AUTH --> PARSE["Parse content"]
@@ -765,6 +783,7 @@ Traditional SEG:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Internet --> MX[Gateway MX] --> Mailbox[Mailbox]
 ```
@@ -776,6 +795,7 @@ API-based cloud inspection:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Mail[Cloud mailbox] <--> API[Security API integration]
   API --> Detect[phishing / BEC / malware / DLP]
@@ -799,6 +819,7 @@ Cloud SEG becomes part of your resilience architecture.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Org[Organization] --> Vendor[Cloud email security provider]
   Vendor --> Mail[Email platform]

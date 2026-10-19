@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> R["Recursive resolver"]
   R --> A["Authoritative DNS"]
@@ -61,6 +62,7 @@ The endpoint usually asks a configured recursive resolver.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant R as Recursive resolver
@@ -95,6 +97,7 @@ If an attacker can influence DNS answers, users may be redirected without changi
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   U["User requests bank.example"] --> DNS["Compromised DNS answer"]
   DNS --> BAD["Attacker IP"]
@@ -140,6 +143,7 @@ A security resolver can apply policy before returning an answer.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client query"] --> R["Secure resolver"]
   R --> P{"Policy"}
@@ -186,6 +190,7 @@ The resolver modifies the answer according to policy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Q["DNS query"] --> MATCH{"RPZ match?"}
   MATCH -->|No| RES["Resolve normally"]
@@ -206,6 +211,7 @@ Instead of resolving a malicious domain to the real attacker infrastructure:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   HOST["Possibly infected host"] --> DNS["Secure resolver"]
   DNS --> SINK["Internal sinkhole"]
@@ -240,6 +246,7 @@ A common pattern:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant M as Malware
   participant D as DNS resolver
@@ -276,6 +283,7 @@ Some malware generates many candidate domains.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   M["Malware"] --> D1["abc123.example"]
   M --> D2["qwe987.example"]
@@ -308,6 +316,7 @@ DNS can carry more than normal hostnames.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   HOST["Compromised host"] --> Q["encoded-data.attacker.example"]
   Q --> DNS["Recursive DNS"] --> AUTH["Attacker authoritative server"]
@@ -349,6 +358,7 @@ Therefore egress policy should consider **which DNS resolvers are allowed**, not
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"DNS allowed"| R["Corporate resolver"]
   C -.->|"direct DNS blocked"| X["Internet resolvers"]
@@ -384,6 +394,7 @@ DNS over TLS encrypts DNS traffic between client and resolver.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS protected DNS"| R["DoT resolver"]
 ```
@@ -401,6 +412,7 @@ DNS over HTTPS carries DNS inside HTTPS.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Browser / OS"] -->|"HTTPS :443"| R["DoH resolver"]
 ```
@@ -432,6 +444,7 @@ Different clients may receive different answers.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   INT["Internal client"] --> R["Resolver"] --> A1["app.example = 10.0.0.10"]
   EXT["External client"] --> PUB["Public DNS"] --> A2["app.example = 203.0.113.10"]
@@ -475,6 +488,7 @@ An open recursive resolver can be abused by outsiders and may contribute to ampl
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet attacker"] --> R["Open resolver"] --> V["Victim"]
 ```
@@ -545,6 +559,7 @@ Unbound is a validating recursive resolver suitable for:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Clients"] --> U["Unbound"]
   U --> RPZ["RPZ policy"]
@@ -577,6 +592,7 @@ Students should observe the change in resolver response.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C1["Client 1"] --> U["Unbound + RPZ"]
   C2["Client 2"] --> U
@@ -607,6 +623,7 @@ Everything can run in containers or namespaces.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   TRAF["DNS traffic"] --> Z["Zeek"] --> LOG["dns.log"]
 ```
@@ -627,6 +644,7 @@ Students can correlate:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> R["Approved DNS resolver"]
   C -.->|"block other DNS"| FW["Firewall"]
@@ -683,6 +701,7 @@ Draw the resolver and firewall relationships.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   USERS["Managed clients"] --> U["Unbound security resolver"]
   U --> RPZ["RPZ / policy"]
@@ -715,6 +734,7 @@ It is an early control, not a complete web security solution.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Q["Name query"] --> TRUST["Trusted resolver?"]
   TRUST --> POLICY["Domain policy"]
@@ -734,6 +754,7 @@ DNS filtering assumes clients use the enterprise resolver.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C[Client] -->|UDP 53| R[Enterprise resolver]
   C -. DoH over 443 .-> EXT[External DoH resolver]
@@ -760,6 +781,7 @@ DNSSEC helps validate that DNS data was not forged.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Root[Root trust anchor] --> TLD[TLD signed zone]
   TLD --> Zone[example.com signed zone]
@@ -773,6 +795,7 @@ Do not confuse:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DNSSEC[DNSSEC] -->|authenticity| A[Is this answer valid?]
   RPZ[DNS policy] -->|security filtering| B[Should we allow this domain?]

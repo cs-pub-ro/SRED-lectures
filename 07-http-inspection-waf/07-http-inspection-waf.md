@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C1["GET /index.html"] --> FW["Firewall sees TCP/443"]
   C2["Malicious HTTP request"] --> FW
@@ -81,6 +82,7 @@ Security-relevant fields can exist in:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> TLS["TLS termination / reverse proxy"]
   TLS --> WAF["WAF"]
@@ -100,6 +102,7 @@ The cleanest conceptual model:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant W as WAF proxy
@@ -232,6 +235,7 @@ The same logical input can have multiple encodings.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   RAW["Raw request"] --> DECODE["Decode / normalize"]
   DECODE --> PARSE["Parse parameters"]
@@ -249,6 +253,7 @@ Rules should inspect the same semantic value the application will process.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   REQ["Ambiguous HTTP request"] --> P1["Proxy interpretation A"]
   REQ --> P2["Backend interpretation B"]
@@ -328,6 +333,7 @@ Simplified model:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   R["Request"] --> M1["Rule match +5"]
   M1 --> M2["Rule match +3"]
@@ -363,6 +369,7 @@ Recommended deployment sequence:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   D["Detect only"] --> O["Observe real traffic"]
   O --> T["Tune exclusions"]
@@ -429,6 +436,7 @@ WAF ≠ secure application.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   V["Known vulnerable endpoint"] --> W["WAF blocks exploit pattern"]
   W --> APP["Application still needs patch"]
@@ -462,6 +470,7 @@ A WAF sees HTTP, but often lacks complete business identity context.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Authenticated user"] --> WAF["WAF"] --> APP["Application authorization"]
 ```
@@ -524,6 +533,7 @@ A WAF can contribute signals, but bot management is often a broader behavior/ide
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS"| RP["Reverse proxy terminates TLS"]
   RP --> WAF["HTTP inspection"]
@@ -543,6 +553,7 @@ TLS can be re-established after inspection.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS"| W["WAF / proxy"] -->|"TLS"| A["Backend"]
 ```
@@ -571,6 +582,7 @@ The application should accept these values only from trusted proxy paths, not ar
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> WAF["WAF"] --> APP["Application"]
   NET -.->|"direct backend exposure"| APP
@@ -589,6 +601,7 @@ Architecture must enforce the inspection path.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> N["NGINX/Apache + ModSecurity"]
   N --> CRS["OWASP CRS"]
@@ -678,6 +691,7 @@ If the WAF is inline, bad policy can block production.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   GOOD["Legitimate traffic"] --> W["WAF misconfiguration"] --> X["Blocked"]
 ```
@@ -713,6 +727,7 @@ Which paths need:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> RP["TLS reverse proxy"] --> WAF["ModSecurity + CRS"]
   WAF --> APP["App"]
@@ -760,6 +775,7 @@ It cannot replace:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   HTTP["HTTP request"] --> NORM["Normalize / parse"]
   NORM --> RULE["Rules + app policy"]
@@ -779,6 +795,7 @@ Modern WAFs inspect more than form parameters.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C[Client] --> WAF[WAF / API gateway]
   WAF --> SCHEMA[Schema validation]
@@ -806,6 +823,7 @@ LLM-backed applications create new inspection problems.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Prompt[User prompt] --> Gateway[AI security gateway]
   Gateway --> PI[Prompt-injection checks]

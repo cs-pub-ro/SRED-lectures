@@ -35,6 +35,7 @@ mdc: true
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H1["Host A"] --> SW["Access switch"]
   H2["Host B"] --> SW
@@ -69,6 +70,7 @@ Its native language is still primarily **Layer 2**.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant A as Host A
   participant S as Switch
@@ -124,6 +126,7 @@ An attacker can change a software-configurable MAC address.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Legit["Legitimate host / MAC A"] --> SW["Switch"]
   Evil["Attacker / claims MAC A"] --> SW
@@ -179,6 +182,7 @@ If the table is exhausted, the switch cannot learn new MACs and begins **floodin
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   E["Attacker sends many fake source MACs"] --> S["Switch table pressure"]
   S --> F["Unknown-destination flooding increases"]
@@ -194,6 +198,7 @@ flowchart LR
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   S1["Students"] --> V10["VLAN 10"]
   S2["Faculty"] --> V20["VLAN 20"]
@@ -228,6 +233,7 @@ Inter-VLAN routing plus ACL/firewall policy is still required.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PC["Endpoint"] -->|"access VLAN 10"| SW1["Switch 1"]
   SW1 -->|"802.1Q trunk / 10,20,30"| SW2["Switch 2"]
@@ -274,6 +280,7 @@ Private VLANs (PVLANs) add **intra-VLAN isolation** without consuming additional
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   subgraph "Primary VLAN 100"
     R["Gateway / Promiscuous port"]
@@ -317,6 +324,7 @@ flowchart TB
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant S as Switch
@@ -338,6 +346,7 @@ sequenceDiagram
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> S["Switch"]
   S --> D["Legitimate DHCP"]
@@ -358,6 +367,7 @@ Classify ports:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   D["DHCP server"] -->|"trusted"| S["Switch"]
   C1["Client"] -->|"untrusted"| S
@@ -388,6 +398,7 @@ This table becomes useful to **other Layer-2 security features**.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant V as Victim
   participant A as Attacker
@@ -408,6 +419,7 @@ The attacker attempts to place itself in the path.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ARP["ARP message"] --> CHECK{"Matches trusted binding?"}
   CHECK -->|Yes| PASS["Forward"]
@@ -427,6 +439,7 @@ Another use of the binding table:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet from access port"] --> C{"Source IP/MAC expected here?"}
   C -->|Yes| F["Forward"]
@@ -444,6 +457,7 @@ Redundant links can create loops.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   S1["Switch A"] --> S2["Switch B"]
   S2 --> S3["Switch C"]
@@ -461,6 +475,7 @@ STP decides which links should forward so Ethernet does not loop indefinitely.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PC["Endpoint port"] --> S["Switch"]
   BPDU["Unexpected BPDU"] --> S
@@ -478,6 +493,7 @@ Use it on ports where a switch should **never** legitimately appear.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   LOOP["Loop / faulty host"] --> B["Excess broadcast or multicast"]
   B --> CPU["Endpoint and switch load"]
@@ -559,6 +575,7 @@ Those components can contain exploitable vulnerabilities:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ATK["Malformed LLDP / CDP packet"] --> OS["Switch OS parser"]
   OS --> BUG["Buffer overflow / OOB write"]
@@ -595,6 +612,7 @@ A switch has two very different roles:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   DATA["Data plane / forwards frames"]
   MGMT["Management plane / configures device"]
@@ -693,6 +711,7 @@ MACsec answers a different question:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H[Host or switch] == encrypted Ethernet link ==> S[Switch]
   TAP[Physical tap] -. sees protected frames .-> H
@@ -711,6 +730,7 @@ It does not replace VLANs, ACLs, NAC, or IPsec.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   F[Ethernet frame] --> ASIC[Switch ASIC / NIC MACsec engine]
   ASIC --> P[Protected Ethernet frame]

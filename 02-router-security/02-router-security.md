@@ -38,10 +38,11 @@ Routers decide where packets go. Secure routers decide **where packets are allow
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
-  LAN1["Users / 10.10.0.0/16"] --> R["Router"]
-  LAN2["Servers / 10.20.0.0/16"] --> R
-  R --> ISP["Upstream / Internet"]
+  LAN1["<img src='/icons/pc.png' /><br>Users / 10.10.0.0/16"] --> R["<img src='/icons/router.png' /><br>Router"]
+  LAN2["<img src='/icons/pc.png' /><br>Servers / 10.20.0.0/16"] --> R
+  R --> ISP["<img src='/icons/pc.png' /><br>Upstream / Internet"]
 ```
 
 </div>
@@ -55,6 +56,7 @@ Every routed boundary is an opportunity for policy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   CP["Control plane / learns routes"] --> FIB["Forwarding table"]
   PKT["Incoming packet"] --> FIB
@@ -125,6 +127,7 @@ Security implication: a more specific route can unexpectedly change the path.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   U["Users / 10.10.0.0/16"] --> R["Router"]
   S["Servers / 10.20.0.0/16"] --> R
@@ -144,6 +147,7 @@ A router can filter packets in **two directions** on every interface:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   LAN["LAN"] -->|"ingress filter"| R["Router"]
   R -->|"egress filter"| WAN["WAN / Internet"]
@@ -218,6 +222,7 @@ ACL rules are evaluated **top-down, first match wins**:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet"] --> R1{"Rule 1?"}
   R1 -->|match| A1["Action"]
@@ -241,6 +246,7 @@ Manually writing anti-spoofing ACLs for every interface is error-prone. **Unicas
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet src=S arrives on eth0"] --> C{"Reverse route for S → eth0?"}
   C -->|Yes| F["Accept"]
@@ -285,6 +291,7 @@ Null0 is faster but blind — use it carrefoully (e.g. under DDOS).
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DB["Database server"] --> R["Router"]
   R -->|"HTTPS updates only"| NET["Internet"]
@@ -312,6 +319,7 @@ BGP FlowSpec distributes traffic-matching rules through the routing control plan
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C[Mitigation controller] --> RR[BGP route reflector]
   RR --> R1[Edge router 1]
@@ -337,6 +345,7 @@ Routers forward fast because match rules are pushed into specialized hardware ta
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P[Packet] --> TCAM[TCAM lookup]
   TCAM -->|hit| ACT[Forward / drop / redirect]
@@ -380,6 +389,7 @@ Mitigations:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H["10.0.0.5:51000"] --> N["NAT"]
   N --> I["203.0.113.10:62001"]
@@ -410,6 +420,7 @@ That side effect is useful, but the clean mental model is:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["10.0.0.5"] --> N["SNAT"]
   N --> W["203.0.113.10"]
@@ -432,6 +443,7 @@ Do not confuse hidden addressing with confidentiality.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Internet client"] --> P["203.0.113.10:443"]
   P --> N["DNAT"]
@@ -462,6 +474,7 @@ Before blaming a security device, always draw **both directions** of the flow.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
     participant C as Client<br/>10.0.0.5
     participant R as Router / NAT<br/>203.0.113.1
@@ -494,6 +507,7 @@ A rule that never increments may be:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   TRAFFIC["Test traffic"] --> RULES["ACL rules"]
   RULES --> COUNT["Counters"]
@@ -554,6 +568,7 @@ Layer-3 policy is necessary but not sufficient.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["LAN A"] --> R1["Router 1"]
   R1 --> R2["Router 2"]
@@ -573,6 +588,7 @@ Predictability is often a security advantage in small environments.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant R1 as Router 1
   participant R2 as Router 2
@@ -647,6 +663,7 @@ The route **leaked to their upstream provider** (PCCW, AS 3491), which propagate
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   YT["YouTube<br/>208.65.153.0/24"] --> G["Global Internet"]
   PT["Pakistan Telecom<br/>announces /24"] --> PCCW["PCCW upstream"]
@@ -668,6 +685,7 @@ Because `/24` was **more specific** than YouTube's `/22`, routers worldwide pref
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PC["Client<br/>GW: 10.0.0.1"] --> RA["Router A<br/>10.0.0.1"]
   RA --> NET["Internet"]
@@ -705,6 +723,7 @@ A **virtual MAC address** is also shared, so the ARP mapping stays valid after f
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
     PC["Client<br/>GW: 10.0.0.1"] --> LAN["LAN"]
     LAN --> R1["Router A<br/>10.0.0.2<br/>VRRP Master"]
@@ -725,6 +744,7 @@ flowchart LR
 <div style="transform: scale(0.6); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
     participant H as Host
     participant A as Router A - Master
@@ -783,6 +803,7 @@ A router sends an **ICMP Redirect** when a better next-hop exists on the same se
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Attacker"] -->|"forged ICMP Redirect:<br/>use me as gateway"| V["Victim"]
   V -->|"traffic now flows to attacker"| A
@@ -834,6 +855,7 @@ Traffic **to the router** is different from traffic **through the router**.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ADM["Admin workstation"] --> MGMT["Management network"]
   MGMT --> R["Router management IP"]
@@ -862,6 +884,7 @@ deny ip any any
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ADM["Admin<br/>10.30.0.0/16"] -->|"SSH allowed"| R["Router"]
   USER["User<br/>10.10.0.0/16"] -->|"SSH denied"| R
@@ -895,6 +918,7 @@ ACLs and logs show individual events. **NetFlow** (Cisco) and **IPFIX** (RFC 701
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   R["Router<br/>exports flows"] --> C["Collector<br/>(e.g. nfcapd)"]
   C --> A["Analyzer<br/>(e.g. nfdump, ntopng)"]

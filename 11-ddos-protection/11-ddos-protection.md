@@ -56,6 +56,7 @@ A perfectly encrypted and authenticated service is still useless when legitimate
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["One attacker"] --> V1["Victim"]
   B1["Bot 1"] --> V2["Victim"]
@@ -74,6 +75,7 @@ Distributed attacks combine resources and source diversity.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   D["Attack traffic"] --> BW["Bandwidth"]
   D --> PPS["Packets per second"]
@@ -95,6 +97,7 @@ If the access link is 1 Gbit/s and 20 Gbit/s arrives:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["20 Gbit/s attack"] --> LINK["1 Gbit/s link saturated"] --> FW["Local firewall"]
 ```
@@ -122,6 +125,7 @@ Stateful devices maintain finite tables.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   MANY["Many attempted connections"] --> CT["Conntrack / session table"]
   CT --> FULL["State exhaustion"]
@@ -140,6 +144,7 @@ A small number of requests may consume expensive backend work.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   REQ["HTTP request"] --> APP["Application"] --> DB["Expensive query"] --> COST["High CPU / DB load"]
 ```
@@ -172,6 +177,7 @@ Normal TCP:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant S as Server
@@ -193,6 +199,7 @@ Simplified idea:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   SYN["Incoming SYN"] --> COOKIE["Encode state in SYN/ACK"]
   COOKIE --> ACK{"Valid ACK returns?"}
@@ -223,6 +230,7 @@ Defenses depend on whether the UDP service is actually required.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Attacker sends request
 with spoofed victim source"] --> R["Reflector"]
@@ -253,6 +261,7 @@ Defensive lessons:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   BOT["Compromised host"] --> ISP["Source validation"]
   ISP -->|"spoofed source rejected"| X["Attack reduced"]
@@ -283,6 +292,7 @@ Prefer targeted limits and required message types.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   BOTS["Many clients"] --> RP["Reverse proxy"] --> APP["Application"]
   APP --> DB["Database"]
@@ -313,6 +323,7 @@ Protecting `/` at 1000 req/s does not help if `/search` becomes unavailable at 5
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   R["Request"] --> L{"Within rate budget?"}
   L -->|Yes| A["Allow"]
@@ -362,6 +373,7 @@ But when arrival rate remains above processing capacity:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   IN["Arrival > service rate"] --> Q["Queue grows"] --> LAT["Latency grows"] --> FAIL["Memory/timeouts/failure"]
 ```
@@ -409,6 +421,7 @@ XDP can execute very early in Linux packet reception.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NIC["NIC receives packet"] --> XDP["XDP program"] --> STACK["Linux network stack"]
 ```
@@ -424,6 +437,7 @@ Dropping earlier can reduce CPU cost, but this is an advanced implementation top
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ATT["Attack"] --> ISP["ISP network"] --> LINK["Customer link"] --> LOCAL["Local mitigation"]
 ```
@@ -441,6 +455,7 @@ RTBH intentionally routes attacked traffic to a discard path upstream.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> ISP["Upstream router"]
   ISP -->|"attacked prefix"| BH["Blackhole"]
@@ -474,6 +489,7 @@ Teach the architectural idea:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DET["Detection"] --> RULE["Mitigation rule"] --> ROUTERS["Upstream routers"]
 ```
@@ -489,6 +505,7 @@ Do not turn the lecture into BGP FlowSpec syntax.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet traffic"] --> SCRUB["Scrubbing capacity"]
   SCRUB -->|"clean traffic"| ORG["Service"]
@@ -532,6 +549,7 @@ Useful telemetry includes:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   R["Routers / switches"] -->|"flow samples/records"| COL["Collector"]
   COL --> DET["DDoS detection"]
@@ -610,6 +628,7 @@ Your service may fail because an upstream dependency is attacked:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   USER["Users"] --> APP["Your app"] --> API["Third-party API"]
   ATT["Attack"] --> API
@@ -628,6 +647,7 @@ Anycast can announce the same service address from multiple locations.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   U1["Users region A"] --> P1["POP A"]
   U2["Users region B"] --> P2["POP B"]
@@ -646,6 +666,7 @@ This can distribute both legitimate load and attacks.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   GEN["Traffic generator"] --> R["Linux router"] --> S["Protected service"]
   R -.-> FLOW["sFlow/NetFlow or counters"]
@@ -692,6 +713,7 @@ A DDoS detector should correlate network pressure with user impact.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DET["Detect anomaly"] --> CLASS["Classify bottleneck"]
   CLASS --> MIT["Apply mitigation"]
@@ -737,6 +759,7 @@ Design controls for bandwidth, state, and application exhaustion.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> UP["Upstream filtering / RTBH / scrub"] --> EDGE["Edge router"] --> FW["Firewall"] --> RP["Rate-limiting proxy"] --> APP["Application"]
   EDGE -.-> FLOW["Flow telemetry"]
@@ -770,6 +793,7 @@ The goal is controlled degradation, resilience, and timely upstream response.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   OBS["Observe rates + health"] --> BOT["Identify bottleneck"]
   BOT --> PLACE["Choose control before bottleneck"]
@@ -788,6 +812,7 @@ State is dangerous under flood.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Flood[Huge packet flood] --> Stateless[Stateless hardware/software filter]
   Stateless -->|drop obvious bad| Drop[Drop]
@@ -809,6 +834,7 @@ Teaching point:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Attack[Internet attack] --> Scrub[Scrubbing center]
   Scrub --> Clean[Clean tunnel / route] --> Site[Protected site]

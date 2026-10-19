@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   U["Unknown laptop"] --> P["Wall port"]
   P --> S["Switch"]
@@ -61,6 +62,7 @@ A secure enterprise usually wants an **admission decision** first.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   D["Device connects"] --> I["Identify / authenticate"]
   I --> P["Evaluate policy"]
@@ -79,6 +81,7 @@ NAC combines identity, network control, and policy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   SUP["Supplicant / endpoint"] --> AUTH["Authenticator / switch/AP"]
   AUTH --> AAA["Authentication server / RADIUS"]
@@ -113,6 +116,7 @@ Before successful authentication, it can permit only traffic needed for the auth
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PC["Endpoint"] --> S["Controlled port"]
   S -->|"before auth"| X["Limited access"]
@@ -141,6 +145,7 @@ The network device does not need to store every enterprise credential.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant E as Endpoint
   participant S as Switch/AP
@@ -192,6 +197,7 @@ noncompliant PC   -> quarantine
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   R["RADIUS decision"] --> E{"Identity / role"}
   E -->|Employee| V10["VLAN 10"]
@@ -255,6 +261,7 @@ For this lecture, the important security questions are:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DEV["Managed device / certificate"] --> NAC["802.1X / NAC"]
   NAC --> CA["Trusted certificate chain"]
@@ -303,6 +310,7 @@ NAC still needs a way to classify them.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   IOT["Printer / MAC X"] --> SW["Switch"]
   SW --> RAD["RADIUS lookup / MAC X"]
@@ -332,6 +340,7 @@ Do not present it as cryptographic proof of device identity.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   G["Guest device"] --> NAC["NAC"]
   NAC --> PORTAL["Registration / captive portal"]
@@ -364,6 +373,7 @@ Modern HTTPS behavior can also make interception-based portal workflows awkward.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   D["Risky endpoint"] --> Q["Quarantine VLAN"]
   Q --> FIX["Update / remediation services"]
@@ -413,6 +423,7 @@ Graduated access can improve usability and resilience.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PC["Laptop"] --> SW["Access switch"]
   SW --> R["RADIUS / PacketFence"]
@@ -430,6 +441,7 @@ The switch is the enforcement point.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PC["Laptop"] --> AP["Access point"]
   AP --> R["RADIUS / PacketFence"]
@@ -451,6 +463,7 @@ It helps decide **which segment or role** an endpoint should receive.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ID["Identity decision"] --> SEG["Segment / role"]
   SEG --> FW["Firewall policy"]
@@ -499,6 +512,7 @@ PacketFence provides open-source NAC capabilities including:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   END["Endpoints"] --> NET["Switches / APs"]
   NET --> PF["PacketFence"]
@@ -521,6 +535,7 @@ FreeRADIUS can also be used independently for a smaller teaching lab.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   SW["Authenticator"] --> FR["FreeRADIUS"]
   FR --> USERS["Local users / LDAP / cert policy"]
@@ -537,6 +552,7 @@ Start small before introducing a full NAC platform.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   E1["Student endpoint"] --> OVS["Open vSwitch"]
   E2["Printer endpoint"] --> OVS
@@ -568,6 +584,7 @@ Make the **state transition** visible.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 stateDiagram-v2
   [*] --> Unknown
   Unknown --> Authenticating
@@ -602,6 +619,7 @@ This is an availability design decision, not merely a configuration checkbox.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DEV["Managed device"] --> CERT{"Certificate valid?"}
   CERT -->|Yes| ACCESS["Normal access"]
@@ -626,6 +644,7 @@ Always separate:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PDP["Policy decision"] --> PEP["Switch/AP enforcement"]
 ```
@@ -715,6 +734,7 @@ Keep the policy understandable enough to operate.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   AUTH["NAC decision"] --> STAFF["Staff"]
   AUTH --> STUD["Students"]
@@ -760,6 +780,7 @@ Admission is one control in a larger system.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   CONNECT["Connect"] --> AUTH["Authenticate / identify"]
   AUTH --> CONTEXT["Add context"]
@@ -781,6 +802,7 @@ Zero Trust changes the unit of decision:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   U[User + device] --> PDP[Policy decision point]
   PDP --> PEP[Policy enforcement point]
@@ -806,6 +828,7 @@ Instead of exposing a whole subnet:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   USER[User] --> ZTNA[ZTNA enforcement]
   ZTNA --> APP1[Allowed app]

@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   C1["Employee"] --> FP["Forward proxy"] --> NET["Internet sites"]
   NET2["Internet clients"] --> RP["Reverse proxy"] --> APP["Our application"]
@@ -74,6 +75,7 @@ The client is configured to send web requests to the proxy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   B["Browser"] -->|"configured proxy"| P["Squid"] --> W["Website"]
 ```
@@ -91,6 +93,7 @@ Without an enforced network policy:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> P["Proxy"] --> W["Internet"]
   C -.->|"bypass"| W
@@ -109,6 +112,7 @@ Common architectural pattern:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"web"| P["Proxy"] --> FW["Egress firewall"] --> NET["Internet"]
   C -.->|"direct 80/443 denied"| FW
@@ -127,6 +131,7 @@ For plain HTTP, the proxy can receive the full request and create a separate ser
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant P as Proxy
@@ -148,6 +153,7 @@ A client can ask the proxy to establish a tunnel.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant P as Proxy
@@ -203,6 +209,7 @@ Instead of only source IP:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   REQ["Web request"] --> ID["Authenticated user/group"]
   ID --> POL["Proxy policy"]
@@ -235,6 +242,7 @@ A server often needs much narrower egress.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   APP["Application server"] -->|"approved update/API sites"| P["Proxy"]
   APP -.->|"arbitrary web"| X["Denied"]
@@ -270,6 +278,7 @@ URL-level inspection generally requires access to the HTTP request, which HTTPS 
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS A"| P["Inspection proxy"] -->|"TLS B"| W["Website"]
 ```
@@ -287,6 +296,7 @@ Managed clients trust a private CA controlled by the organization.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ORG["Organization CA"] --> C["Client trust store"]
   ORG --> P["Proxy-generated site certificates"]
@@ -345,6 +355,7 @@ The proxy must validate the real server certificate correctly.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client trusts proxy"] --> P["Proxy"]
   P --> V{"Validate website certificate"}
@@ -377,6 +388,7 @@ Large-content inspection requires careful limits to avoid resource exhaustion.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   DL["Download"] --> P["Proxy"] --> SCAN["Scanner"]
   SCAN -->|clean| C["Client"]
@@ -452,6 +464,7 @@ HTTP/3 commonly uses QUIC over UDP.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   B["Browser"] -->|"QUIC / UDP"| W["Website"]
   B -->|"proxy path"| P["Traditional TCP proxy"]
@@ -476,6 +489,7 @@ This can improve inspection consistency but may reduce performance and should be
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"HTTPS"| DOH["External DoH resolver"]
 ```
@@ -535,6 +549,7 @@ Squid can demonstrate:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client request"] --> ACL["ACL evaluation"]
   ACL -->|allow| CON["Connect upstream"]
@@ -568,6 +583,7 @@ Readable policy reinforces the same rule-order lessons as firewalls.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client namespace"] --> P["Squid"] --> W["Lab web server"]
   C -.->|"direct web denied"| FW["Egress firewall"]
@@ -617,6 +633,7 @@ A secure web gateway may know a great deal about users.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   USER["User activity"] --> P["Proxy logs/content"] --> GOV["Retention + access controls"]
 ```
@@ -674,6 +691,7 @@ Requirements:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   USERS["Employees"] --> SQ["Squid / SWG"]
   SERV["Servers"] --> SQ
@@ -718,6 +736,7 @@ It is an egress control point, not an endpoint replacement.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   USER["User / server"] --> ID["Identity"]
   ID --> DEST["Destination / category"]
@@ -737,6 +756,7 @@ The on-prem proxy model breaks down for distributed users.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   U1[Remote user] --> POP[Nearest SASE/SWG PoP]
   U2[Branch] --> POP
@@ -765,6 +785,7 @@ TLS inspection creates a sensitive key-management problem.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   CA[Enterprise inspection CA] --> HSM[HSM / protected key store]
   HSM --> POP[Inspection proxy]

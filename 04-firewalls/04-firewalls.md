@@ -44,6 +44,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> FW["Firewall"]
   FW --> DMZ["DMZ"]
@@ -79,6 +80,7 @@ Each packet is considered independently.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet"] --> R["Rules"]
   R -->|match allow| A["Forward"]
@@ -110,6 +112,7 @@ This says nothing about whether the packet belongs to an already-established con
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet"] --> CT["Connection tracking"]
   CT --> ST{"State"}
@@ -131,6 +134,7 @@ Simplified view:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 stateDiagram-v2
   [*] --> New
   New --> Established: handshake accepted
@@ -176,6 +180,7 @@ This state is both useful and a resource an attacker may try to exhaust.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   INET["Internet"] --> FW["Firewall"]
   FW --> DMZ["DMZ"]
@@ -212,6 +217,7 @@ Every allow should have a reason.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Traffic"] --> E{"Explicitly required?"}
   E -->|Yes| A["Allow"]
@@ -244,6 +250,7 @@ A broad earlier rule can make a later rule unreachable.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet"] --> B["Broad allow"]
   B --> A["Accepted"]
@@ -289,6 +296,7 @@ Compromise should not automatically equal unrestricted egress.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   APP["App subnet"] --> FW["Internal firewall"]
   FW --> DB["DB subnet"]
@@ -322,6 +330,7 @@ A stateful firewall may permit both because the connection itself is allowed.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> FW["Firewall / IP/port/state"]
   FW --> WAF["WAF / HTTP semantics"]
@@ -341,6 +350,7 @@ Keep these concepts distinct:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Packet"] --> NAT["Translate address/port"]
   NAT --> POL["Apply policy"]
@@ -358,6 +368,7 @@ Exact processing order depends on implementation, but translation and authorizat
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Internet"] --> PUB["203.0.113.10:443"]
   PUB --> FW["DNAT + firewall"]
@@ -412,6 +423,7 @@ But investigate persistent invalid traffic before assuming it is malicious; rout
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> F1["Firewall A"] --> S["Server"]
   S --> F2["Firewall B"] --> C
@@ -430,6 +442,7 @@ Two firewalls may synchronize connection state.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> A["Active firewall"] --> S["Server"]
   A -.->|"state sync"| B["Standby firewall"]
@@ -505,6 +518,7 @@ It exposes the mechanics without hiding them behind a vendor UI.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   IN["Ingress packet"] --> HOOK["Netfilter hook"]
   HOOK --> RULES["nftables chain"]
@@ -550,6 +564,7 @@ Then match the set rather than duplicating addresses across many rules.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   INET["Internet namespace"] --> FW["Linux firewall"]
   FW --> DMZ["Web namespace"]
@@ -580,6 +595,7 @@ Students can test every permitted and denied flow directly.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TD
   A["Packet reaches firewall?"] --> B["Correct route?"]
   B --> C["Correct zone/interface?"]
@@ -647,6 +663,7 @@ A firewall cannot infer intent from IP/port/state alone.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> FW["Firewall"] --> S["Server"]
   C -.->|"TLS payload encrypted"| S
@@ -689,6 +706,7 @@ Build the smallest understandable policy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   NET["Internet"] -->|"443"| WEB["Web DMZ"]
   WEB -->|"5432"| DB["Database"]
@@ -735,6 +753,7 @@ Other layers exist for those questions.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Z1["Source zone"] --> CT["Connection state"]
   CT --> POL["Policy"]
@@ -761,6 +780,7 @@ Advanced firewall features are expensive:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P[Packet stream] --> FAST[Fast path]
   FAST -->|known flow| OUT[Forward]
@@ -781,6 +801,7 @@ Even with open-source tools, feature choice changes throughput.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   A[nftables rules] --> B[conntrack]
   B --> C[logging]

@@ -30,6 +30,7 @@ This lecture connects dedicated network equipment to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Devices[Network devices] --> Trust[Trust decisions]
   Trust --> Keys[Cryptographic keys]
@@ -58,6 +59,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   L2[Switches and NAC] --> L3[Routers and firewalls]
   L3 --> App[Proxies, WAF, DNS, email]
@@ -84,6 +86,7 @@ Individual devices are easy to overvalue.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Box[Security box] -->|bad assumption| Trust[We are secure]
 ```
@@ -95,6 +98,7 @@ Architecture asks:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Req[Business requirement] --> Threat[Threat model]
   Threat --> Control[Control placement]
@@ -111,6 +115,7 @@ flowchart LR
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Internet --> FW[Firewall]
   FW --> LAN[Trusted internal network]
@@ -136,6 +141,7 @@ Common failure:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   User[Remote user]
   BYOD[BYOD device]
@@ -170,6 +176,7 @@ It means:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Request[Access request] --> Verify[Authenticate + authorize]
   Verify --> Session[Session to resource]
@@ -185,6 +192,7 @@ flowchart LR
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Subject[Subject] --> PEP[Policy Enforcement Point]
   PEP --> Resource[Enterprise resource]
@@ -208,6 +216,7 @@ Key separation:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Signals[Input signals] --> PE[Policy Engine]
   PE --> Decision[Allow / deny / step-up / limit]
@@ -236,6 +245,7 @@ A PEP can be many things.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   PEP[Policy Enforcement Point]
   PEP --> SW[Switch]
@@ -259,6 +269,7 @@ Important point:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NAC[NAC] -->|admit device| VLAN[VLAN access]
   ZT[ZTNA] -->|authorize session| App[Application access]
@@ -283,6 +294,7 @@ ZTNA answers:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   User[User segment]
   Web[Web tier]
@@ -312,6 +324,7 @@ Goal:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   WorkloadA[Workload A] --> HostPEP[Host firewall / eBPF]
   HostPEP --> Network[Network fabric]
@@ -337,6 +350,7 @@ Microsegmentation can be enforced at:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Identity[Correct user] --> Risk{Safe session?}
   Device[Managed device] --> Risk
@@ -368,6 +382,7 @@ Examples:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Endpoint --> Posture[Posture check]
   Posture -->|healthy| Access[Allow]
@@ -383,6 +398,7 @@ flowchart LR
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant U as User
   participant P as PEP
@@ -409,6 +425,7 @@ A common mistake:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ZTNA[ZTNA product] --> Flat[Flat internal network]
   Flat --> Risk[Lateral movement remains]
@@ -421,6 +438,7 @@ Better:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ZTNA[ZTNA access] --> Segment[Microsegmented resource]
   Segment --> Logs[Continuous monitoring]
@@ -437,6 +455,7 @@ Many network controls depend on private keys.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   PKI[PKI CA key]
   TLS[TLS termination key]
@@ -463,6 +482,7 @@ A Hardware Security Module is a cryptographic boundary.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   App[Application / appliance] -->|request sign/decrypt| HSM[HSM]
   HSM -->|operation result| App
@@ -482,6 +502,7 @@ The key idea:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   SW[Software key file] --> OS[Host OS compromise]
   OS --> Exfil[Key exfiltration risk]
@@ -503,6 +524,7 @@ Misuse through authorized API access remains possible.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Root[Offline root CA key in HSM]
   Root --> Issuing[Issuing CA]
@@ -528,6 +550,7 @@ Network security depends on PKI for:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Client --> Proxy[Inspection proxy]
   Proxy --> HSM[HSM-held subordinate CA key]
@@ -549,6 +572,7 @@ This key requires stronger custody than ordinary server keys.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   ZSK[Zone signing key] --> Sign[Sign DNS zone data]
   KSK[Key signing key] --> SignZSK[Sign ZSK]
@@ -570,6 +594,7 @@ FIPS 140-3 defines security requirements for cryptographic modules.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Module[Cryptographic module] --> Design[Secure design]
   Module --> Interfaces[Controlled interfaces]
@@ -605,6 +630,7 @@ Dedicated equipment is often compromised through management interfaces.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Admin[Admin] --> Mgmt[Management network]
   Mgmt --> Devices[Switches / routers / firewalls]
@@ -632,6 +658,7 @@ A firewall rule is not only a technical setting.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Req[Requirement] --> Rule[Configuration]
   Rule --> Change[Change record]
@@ -668,6 +695,7 @@ For network equipment, useful evidence includes:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   ISMS[ISMS] --> Controls[Controls]
   Controls --> Evidence[Evidence]
@@ -685,6 +713,7 @@ NIS2 turns security engineering into governance obligations.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Entity[Essential / important entity] --> Risk[Risk management]
   Entity --> Incident[Incident reporting]
@@ -703,6 +732,7 @@ Network controls become part of demonstrable risk management.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant Org as Organization
   participant CSIRT as CSIRT / authority
@@ -728,6 +758,7 @@ The point is:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PoorControl[Poor control evidence] --> RegRisk[Regulatory risk]
   RegRisk --> Exec[Executive accountability]
@@ -752,6 +783,7 @@ DORA focuses on digital operational resilience for financial entities.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   DORA[DORA] --> Risk[ICT risk management]
   DORA --> Incidents[Incident reporting]
@@ -776,6 +808,7 @@ Relevant to network equipment:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Bank[Financial entity] --> Provider[ICT third-party provider]
   Provider --> Service[Critical service]
@@ -797,6 +830,7 @@ For every security appliance or cloud security service, ask:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Vendor[Vendor / service] --> Access[What data can it access?]
   Vendor --> Outage[What if it is down?]
@@ -815,6 +849,7 @@ This applies to both hardware and SaaS controls.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Compliance[Pass audit] -. not enough .-> Security[Actual security]
   Security --> Evidence[Evidence helps prove control]
@@ -846,6 +881,7 @@ Design for:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Users[Users] --> Apps[Applications]
   Attackers[Attackers] --> Edge[Edge controls]
@@ -878,6 +914,7 @@ The design must support:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Internet --> DDoS[DDoS service]
   DDoS --> EdgeFW[Edge firewall]
@@ -905,6 +942,7 @@ flowchart TB
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Admin[Admin with MFA] --> Bastion[Admin bastion]
   Bastion --> MgmtNet[Management network]
@@ -927,6 +965,7 @@ No production user subnet should administer infrastructure directly.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant U as User/device
   participant P as PEP
@@ -950,6 +989,7 @@ sequenceDiagram
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   HSM[HSM cluster]
   HSM --> PKI[PKI CA keys]
@@ -988,6 +1028,7 @@ For each control:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Phish[Phishing email] --> Creds[Credential theft]
   Creds --> Login[Remote login]
@@ -1015,6 +1056,7 @@ Map where controls detect or block:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Failure[Cloud SEG outage] --> MailFlow[Mail flow impact]
   Failure --> Phishing[Reduced detection]
@@ -1038,6 +1080,7 @@ Questions:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Inspect[TLS inspection] --> Benefit[Malware/DLP visibility]
   Inspect --> Risk[Privacy/key risk]
@@ -1062,6 +1105,7 @@ A mature design documents:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   SASE[SASE provider] --> Global[Global user coverage]
   SASE --> Elastic[Elastic inspection capacity]
@@ -1087,6 +1131,7 @@ Questions:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Inventory[Crypto inventory] --> Priority[Prioritize long-lived data]
   Priority --> Pilot[PQC/hybrid pilot]
@@ -1153,6 +1198,7 @@ Students should submit:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Architecture --> Placement[Control placement]
   Placement --> Enforcement[Enforcement]
@@ -1189,6 +1235,7 @@ You now have three layers of understanding:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   Device[How each device works]
   Path[How traffic crosses controls]

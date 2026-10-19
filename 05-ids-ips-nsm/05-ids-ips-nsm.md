@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   FW["Firewall"] --> Q1["Is the flow allowed?"]
   IDS["IDS / IPS"] --> Q2["Does it look malicious?"]
@@ -59,6 +60,7 @@ The tools overlap, but the questions are different.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> S["Switch"] --> SV["Server"]
   S -.->|"mirror copy"| IDS["IDS"]
@@ -80,6 +82,7 @@ Limitation: it usually cannot directly stop the observed packet.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> IPS["Inline IPS"] --> S["Server"]
 ```
@@ -103,6 +106,7 @@ The security sensor is now also an availability dependency.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   H1["Host A"] --> SW["Switch"]
   H2["Host B"] --> SW
@@ -121,6 +125,7 @@ SPAN is convenient but can lose packets under load and depends on correct switch
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Segment A"] --> TAP["Network TAP"] --> B["Segment B"]
   TAP -.-> SENSOR["Sensor"]
@@ -154,6 +159,7 @@ Concept:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   T["Traffic"] --> P["Parser"] --> R["Rules"]
   R -->|match| A["Alert / drop"]
@@ -234,6 +240,7 @@ It is a strong teaching platform because packet, flow, protocol, and rule concep
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PKT["Packets"] --> FLOW["Flow tracking"]
   FLOW --> APP["Protocol parsing"]
@@ -286,6 +293,7 @@ A connection contains more context than one packet.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant S as Server
@@ -321,6 +329,7 @@ This can feed malware analysis without making the IDS a full endpoint scanner.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ALERT["Alert"] --> TRIAGE["Triage"]
   TRIAGE -->|benign| CLOSE["Close / tune"]
@@ -387,6 +396,7 @@ The same alert can have different priority:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   A["Exploit attempt"] --> DEV["Developer test VM"]
   A --> PROD["Production identity server"]
@@ -432,6 +442,7 @@ Its strength is **structured network context**.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   PKT["Network packets"] --> ANALYZER["Protocol analyzers"]
   ANALYZER --> EVENT["Events"]
@@ -467,6 +478,7 @@ A timeline might look like:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant H as Host
   participant D as DNS
@@ -516,6 +528,7 @@ Anomaly detection produces leads, not certainty.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS"| S["Sensor"] -->|"TLS"| W["Server"]
 ```
@@ -538,6 +551,7 @@ A passive sensor may still observe:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS"| P["Reverse proxy"]
   P -->|"clear or re-encrypted"| APP["Application"]
@@ -586,6 +600,7 @@ An incorrect IPS decision can cause an outage.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   FP["False positive"] --> IDS["IDS: alert"]
   FP --> IPS["IPS: drop real traffic"]
@@ -613,6 +628,7 @@ The right answer depends on the protected service.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ATT["Attacker namespace"] --> SW["OVS / bridge"] --> WEB["Web namespace"]
   SW -.-> SUR["Suricata IDS"]
@@ -660,6 +676,7 @@ One packet trace becomes an **investigation timeline**.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   CREATE["Create / import rule"] --> TEST["Test"]
   TEST --> DEPLOY["Deploy"]
@@ -708,6 +725,7 @@ Where would you place sensors, and what would each location reveal?
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   NET["Internet"] --> FW["Firewall"] --> RP["TLS reverse proxy"] --> APP["App"] --> DB["DB"]
   FW -.-> S1["Sensor 1
@@ -757,6 +775,7 @@ A perfect alert that nobody responds to has little value.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   SEE["See traffic"] --> PARSE["Parse context"]
   PARSE --> DETECT["Detect behavior"]
@@ -776,6 +795,7 @@ Passive sensors usually cannot decrypt modern TLS sessions.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C[Client] == TLS 1.3 with PFS ==> S[Server]
   C -. metadata copy .-> IDS[Sensor]
@@ -799,6 +819,7 @@ ETA-style detection uses flow features rather than plaintext.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   FLOW[Encrypted flow] --> F1[packet sizes]
   FLOW --> F2[timing]

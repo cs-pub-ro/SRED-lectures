@@ -1,11 +1,43 @@
 <script setup>
 import { useNav } from '@slidev/client'
+import { onMounted, onUnmounted } from 'vue'
 import sredLogo from './public/sred-logo.png'
 import ccLogo from './public/CC-by-nc-sa.png'
 import downloadIcon from './public/download.svg'
 
 const { isPrintMode, isPrint } = useNav()
 const pdfUrl = import.meta.env.BASE_URL + 'slides.pdf'
+
+/* Fix Mermaid icon sizing — two-pronged approach:
+   1. Head CSS: constrains images BEFORE Mermaid's getBoundingClientRect()
+   2. MutationObserver: patches inline styles AFTER Mermaid applies them */
+const styleEl = document.createElement('style')
+styleEl.textContent = `
+  .nodeLabel img {
+    width: 55px !important;
+    max-width: 55px !important;
+    height: auto !important;
+    display: inline-block !important;
+  }
+`
+document.head.appendChild(styleEl)
+
+let observer = null
+function fixMermaidImages() {
+  document.querySelectorAll('.nodeLabel img').forEach(img => {
+    img.style.setProperty('width', '55px', 'important')
+    img.style.setProperty('max-width', '55px', 'important')
+    img.style.setProperty('display', 'inline-block', 'important')
+  })
+}
+onMounted(() => {
+  fixMermaidImages()
+  observer = new MutationObserver(fixMermaidImages)
+  observer.observe(document.body, { childList: true, subtree: true })
+})
+onUnmounted(() => {
+  if (observer) observer.disconnect()
+})
 </script>
 
 <template>

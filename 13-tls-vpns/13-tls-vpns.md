@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   U["Remote user"] --> NET["Internet"] --> G["VPN gateway"] --> CORP["Corporate network"]
 ```
@@ -70,6 +71,7 @@ A VPN gateway can provide:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["VPN client"] -->|"TLS-authenticated channel"| S["OpenVPN server"]
   S --> T["Virtual tunnel interface"]
@@ -87,6 +89,7 @@ The application carries IP packets through a protected channel.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   APP["Applications"] --> ROUTE["OS routing table"]
   ROUTE --> TUN["tun interface"]
@@ -121,6 +124,7 @@ Prefer routed designs unless bridging is truly required.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client
 10.8.0.10"] --> T["VPN tunnel"] --> S["Server
@@ -169,6 +173,7 @@ The client should know it reached the intended VPN server.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> CERT["Validate server certificate / trust"] --> S["VPN server"]
 ```
@@ -218,6 +223,7 @@ This supports:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant U as User
   participant V as VPN gateway
@@ -241,6 +247,7 @@ Conceptually separate:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   CTRL["Control channel
 authenticate + negotiate"] --> SESSION["VPN session"]
@@ -259,6 +266,7 @@ This helps students reason about setup failures vs traffic failures.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Remote laptop"] -->|"all routes"| V["VPN gateway"]
   V --> CORP["Corporate services"]
@@ -276,6 +284,7 @@ The organization can enforce web/DNS policy centrally, but consumes more bandwid
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Remote laptop"] -->|"corporate prefixes"| V["VPN gateway"] --> CORP["Corporate"]
   C -->|"other Internet"| NET["Local Internet path"]
@@ -336,6 +345,7 @@ Remote users often need internal DNS names.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["VPN client"] -->|"DNS through tunnel"| D["Corporate DNS"]
   D --> INT["Internal names"]
@@ -375,6 +385,7 @@ Prefer:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   V["VPN client pool"] --> FW["Internal firewall"]
   FW --> APP1["Required app"]
@@ -393,6 +404,7 @@ Treat remote clients as their own zone.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   VPN["Remote VPN"] --> FW["Firewall"]
   USER["Office users"] --> FW
@@ -439,6 +451,7 @@ Complement VPN with:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   LOST["Lost laptop"] --> CRED["VPN certificate/credentials"] --> RISK["Remote access risk"]
 ```
@@ -490,6 +503,7 @@ Choose based on network constraints, not superstition.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   APP["Inner TCP"] --> VPN["VPN over outer TCP"] --> LOSS["Packet loss"]
   LOSS --> RETRANS["Two reliability layers react"]
@@ -508,6 +522,7 @@ A remote client is commonly behind NAT.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client private IP"] --> NAT["Home/hotel NAT"] --> NET["Internet"] --> V["VPN server"]
 ```
@@ -536,6 +551,7 @@ VPN software needs timers/reconnection behavior that tolerates realistic client 
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   P["Original packet"] --> ENC["VPN encapsulation"] --> L["Larger outer packet"]
 ```
@@ -564,6 +580,7 @@ OpenVPN CE gives a clear open-source platform for:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Remote client namespace"] --> NET["Internet namespace"] --> V["OpenVPN server"]
   V --> FW["Internal firewall"] --> APP["Internal app"]
@@ -661,6 +678,7 @@ After decryption, the VPN server still needs to route/firewall the inner packet.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   TUN["tun0 packet"] --> FW["Internal policy"] --> LAN["Corporate LAN"]
 ```
@@ -689,6 +707,7 @@ Routing is preferable when architecture allows clear end-to-end addressing.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["VPN client 10.8.0.10"] --> V["VPN gateway SNAT"] --> APP["Internal app sees gateway address"]
 ```
@@ -734,6 +753,7 @@ Peak remote-work events can turn a normally quiet VPN into critical infrastructu
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Clients"] --> DNS["VPN service name"]
   DNS --> V1["VPN gateway A"]
@@ -767,6 +787,7 @@ Design a split-tunnel policy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   C["Managed remote laptop"] -->|"MFA + cert"| V["OpenVPN gateway"]
   V --> FW["Remote-access firewall zone"]
@@ -831,6 +852,7 @@ It securely extends **connectivity**, which can extend attacker connectivity too
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   AUTH["Authenticate client"] --> SESSION["Establish VPN session"]
   SESSION --> TUN["Create tunnel interface / virtual IP"]
@@ -850,6 +872,7 @@ Remote-access VPN gateways are sensitive to handshake cost.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Many[Many remote users reconnect] --> GW[TLS VPN gateway]
   GW --> CPU[Handshake CPU]

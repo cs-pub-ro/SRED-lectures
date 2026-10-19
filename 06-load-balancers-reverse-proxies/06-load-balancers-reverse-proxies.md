@@ -42,6 +42,7 @@ You should be able to:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Clients"] --> LB["Load balancer"]
   LB --> W1["Web 1"]
@@ -80,6 +81,7 @@ An L4 balancer primarily reasons about:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TCP/443"| LB["L4 LB"]
   LB -->|"connection"| B["Backend"]
@@ -96,6 +98,7 @@ An L7 proxy understands application semantics.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> RP["HTTP reverse proxy"]
   RP -->|"/api"| API["API pool"]
@@ -114,6 +117,7 @@ The proxy terminates one connection and creates another.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant C as Client
   participant P as Reverse proxy
@@ -151,6 +155,7 @@ That is much richer than an L3/L4 firewall.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   R1["Request 1"] --> B1["Backend 1"]
   R2["Request 2"] --> B2["Backend 2"]
@@ -183,6 +188,7 @@ No algorithm perfectly predicts application cost.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C1["Client A"] --> H["Hash"] --> B1["Backend 1"]
   C2["Client B"] --> H --> B2["Backend 2"]
@@ -199,6 +205,7 @@ Hashing can provide deterministic affinity, but topology changes may remap clien
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 sequenceDiagram
   participant L as Load balancer
   participant B as Backend
@@ -218,6 +225,7 @@ A backend should receive production traffic only while it is considered healthy.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   LB["Load balancer"] --> B1["Backend 1 healthy"]
   LB -.->|"removed"| B2["Backend 2 failed"]
@@ -265,6 +273,7 @@ High availability should not hide operational evidence.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS"| LB["L4 LB"] -->|"same TLS"| B["Backend"]
 ```
@@ -280,6 +289,7 @@ The load balancer can distribute connections without seeing HTTP content.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS"| LB["TLS termination"]
   LB -->|"HTTP or TLS"| B["Backend"]
@@ -296,6 +306,7 @@ Now the proxy sees application requests and becomes responsible for private keys
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] -->|"TLS 1"| LB["Reverse proxy"] -->|"TLS 2"| B["Backend"]
 ```
@@ -330,6 +341,7 @@ For HTTPS, the proxy may route based on the requested server name when available
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> LB["Proxy"]
   LB -->|"app.example"| A["App pool"]
@@ -369,6 +381,7 @@ A backend may otherwise see only the proxy as the source.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client 198.51.100.10"] --> P["Proxy 10.0.0.5"] --> B["Backend sees proxy"]
 ```
@@ -400,6 +413,7 @@ Conceptually:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> P["Proxy"] -->|"source metadata + connection"| B["Backend"]
 ```
@@ -431,6 +445,7 @@ If application state lives outside one web process:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   LB["Load balancer"] --> W1["Web 1"]
   LB --> W2["Web 2"]
@@ -463,6 +478,7 @@ These controls help protect scarce backend resources.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> RL{"Rate below limit?"}
   RL -->|Yes| APP["Backend"]
@@ -503,6 +519,7 @@ Slow clients should not hold expensive resources forever.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   A["Many very slow clients"] --> P["Proxy"]
   P --> R["Connection/resource pressure"]
@@ -533,6 +550,7 @@ can create request-smuggling style problems.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   NET["Internet"] --> CDN["Edge proxy"] --> LB["Internal HAProxy"] --> APP["App"]
 ```
@@ -567,6 +585,7 @@ HAProxy can demonstrate:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Clients"] --> FE["Frontend"]
   FE --> ACL["ACL / routing rules"]
@@ -614,6 +633,7 @@ This is where load balancing becomes application-aware routing.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client namespace"] --> H["HAProxy"]
   H --> W1["Web 1"]
@@ -660,6 +680,7 @@ Proxy logs often become a crucial source for application incident investigations
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Internet"] --> RP["Reverse proxy"] --> WAF["WAF policy"] --> APP["Application"]
 ```
@@ -677,6 +698,7 @@ Some architectures place authentication before the application.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Client"] --> AUTH["Identity-aware proxy"] --> APP["Application"]
 ```
@@ -708,6 +730,7 @@ Centralization creates both leverage and concentration risk.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Clients"] --> VIP["Virtual service IP"]
   VIP --> A["LB A"]
@@ -755,6 +778,7 @@ Draw the flow before writing HAProxy configuration.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   C["Clients"] --> H["HAProxy
 TLS + routing"]
@@ -786,6 +810,7 @@ Its position enables security controls, but does not replace them.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   ACCEPT["Accept client connection"] --> INSPECT["Inspect L4/L7 context"]
   INSPECT --> SELECT["Select backend"]
@@ -804,6 +829,7 @@ TLS termination concentrates cryptographic cost at the edge.
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart LR
   Clients[Many clients] --> LB[Load balancer / TLS terminator]
   LB --> Web1[Backend 1]
@@ -828,6 +854,7 @@ Design impact:
 <div style="transform: scale(0.8); transform-origin: top center;">
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
 flowchart TB
   A[Classical TLS] --> B[Hybrid TLS]
   B --> C[More bytes in handshake]
