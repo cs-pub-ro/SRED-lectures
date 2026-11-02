@@ -848,18 +848,6 @@ Controls:
 - streaming inspection;
 - fail-closed or fail-open decision documented.
 
----
-
-# Review questions
-
-1. Why does a WAF need HTTP visibility?
-2. What is the difference between positive and negative models?
-3. Why is normalization important?
-4. Why deploy CRS in detection-only mode first?
-5. What is virtual patching?
-6. How can architecture bypass a perfectly configured WAF?
-
----
 
 # Final checklist
 

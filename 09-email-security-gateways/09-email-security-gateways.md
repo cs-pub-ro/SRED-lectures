@@ -839,18 +839,6 @@ Questions for DORA/NIS2-style thinking:
 - what are reporting obligations?
 - can we operate if the provider fails?
 
----
-
-# Review questions
-
-1. Why is email especially suitable for gateway inspection?
-2. What does SPF actually authenticate?
-3. How is DKIM different from encryption?
-4. What role does DMARC alignment play?
-5. Why can an authenticated message still be malicious?
-6. Why do BEC defenses need business-process controls?
-
----
 
 # Final checklist
 

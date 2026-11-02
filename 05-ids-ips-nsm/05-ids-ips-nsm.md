@@ -27,8 +27,6 @@ Firewalls decide what is permitted. Detection systems ask whether permitted or o
 
 # Learning objectives
 
-You should be able to:
-
 - distinguish IDS, IPS, and NSM;
 - compare passive and inline deployment;
 - explain signatures and protocol-aware detection;
@@ -73,6 +71,10 @@ Advantages:
 - easy to deploy.
 
 Limitation: it cannot **drop** the initial offending packet (already forwarded on the wire).
+
+---
+
+# Passive IDS
 
 However, a passive IDS can still perform **Active Response**:
 - inject forged **TCP RST** packets toward both endpoints (**sequence strafing** — multiple RSTs with different sequence numbers to land inside the receiver's sliding window)
@@ -288,6 +290,10 @@ The **rule header** is a 7-tuple:
 | Destination IP | `$HOME_NET` |
 | Destination port | `any` |
 
+---
+
+# Rule fields
+
 **Sticky buffers:** `http.uri` switches the inspection buffer for all subsequent `content` keywords — they match against the normalized URI, not the raw packet payload.
 
 **MPM pre-filter:** the engine marks one `content` per rule as the `fast_pattern` anchor. A single Aho–Corasick pass finds candidate rules; only those rules are fully evaluated — the engine does **not** test 50 000 rules sequentially.
@@ -331,25 +337,13 @@ Packet arrives → buffer → reassemble stream → match rules → forward or d
 | Full protocol decode | HTTP request body, file content | ms–tens of ms |
 | File extraction + cloud ML | Stream hash + rapid ML verdict | ms–low seconds (fails open on timeout) |
 
+---
+
+# IPS buffering — the latency cost
+
 Full behavioral sandboxing (VM detonation) is performed **asynchronously out-of-band** — the sensor forwards packets and submits a file copy; if the sandbox later convicts the file, a reactive signature or block is distributed. Holding an entire file inline for minutes would exhaust TCP RTO timers and sensor memory.
 
 A true multi-minute inline hold requires an **Explicit Proxy** (L7 termination), which is architecturally different from packet-level IPS buffering.
-
----
-
-# High-speed sensor architecture
-
-Why sensors drop packets under load — and how to prevent it.
-
-**Packet acquisition (Linux):**
-- **AF_PACKET** — zero-copy ring-buffer capture; used in IPS bridge mode or passive TAP mode
-- **NFQUEUE** — nftables/iptables delivers packets to userspace; supports fail-open bypass if the sensor process dies
-
-**Symmetric flow distribution:** both directions of a TCP/UDP flow must land on the **same worker thread** (CPU core) — otherwise stateful stream reassembly breaks. Suricata's `cluster_flow` mode hashes on the 5-tuple to guarantee this.
-
-**Multi-Pattern Matching (MPM):** the engine does **not** evaluate 50 000 rules sequentially. One `content` keyword per rule is designated `fast_pattern`. A single **Aho–Corasick** pass over each buffer finds all candidate rules in $O(n)$; only matching candidates are fully evaluated.
-
-**Workers mode:** each packet-capture thread runs its own detection engine — no locking, linear horizontal scaling across CPU cores.
 
 ---
 
@@ -435,6 +429,10 @@ $$
 | Benign (9 900) | 99 FP | 9 801 TN |
 
 Precision = 99 / (99 + 99) = **50%** — half the alarms are false.
+
+---
+
+# The Base-Rate Fallacy
 
 At network-flow scale ($P(\text{Attack}) \ll 0.01\%$), precision drops near zero unless FPR is negligibly small.
 
@@ -611,9 +609,24 @@ A passive sensor may still observe:
 - TLS handshake metadata;
 - DNS around the connection.
 
+---
+
+# Encrypted traffic
+
 **TLS 1.3** encrypts all handshake messages after ServerHello — server certificates are no longer visible on the wire (unlike TLS 1.2). **Encrypted Client Hello (ECH)** additionally encrypts the SNI field, removing the last plaintext domain indicator.
 
 **QUIC / HTTP/3** encapsulates TLS 1.3 over **UDP**, bypassing TCP-based flow rules and many legacy DPI engines entirely.
+
+---
+
+# Encrypted traffic — protocol comparison
+
+| Protocol | 5-Tuple | TCP Flags | ClientHello Ciphers | SNI / ALPN | Server Cert | NSM Status |
+|---|---|---|---|---|---|---|
+| **TLS 1.2** · TCP (RFC 5246) | Cleartext | Cleartext | Static order | Cleartext | Cleartext | full NSM visibility |
+| **TLS 1.3** · TCP (RFC 8446) | Cleartext | Cleartext | Randomized | Cleartext | Encrypted | broken by ext-shuffling |
+| **QUIC / HTTP/3** · UDP + TLS 1.3 (RFC 9000) | UDP 5-tuple | Blind (no TCP) | Randomized | Cleartext | Encrypted | TCP blind; JA4 handles QUIC |
+| **TLS 1.3 + ECH** · Encrypted Client Hello | Cleartext | Cleartext | Inner encrypted | Encrypted (decoy) | Encrypted | Dark blindness |
 
 ---
 
@@ -731,24 +744,6 @@ Detection does not replace:
 - incident response.
 
 A perfect alert that nobody responds to has little value.
-
----
-
-# Mental model
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  SEE["See traffic"] --> PARSE["Parse context"]
-  PARSE --> DETECT["Detect behavior"]
-  DETECT --> RECORD["Record evidence"]
-  RECORD --> TRIAGE["Human / automated triage"]
-  TRIAGE --> RESPOND["Respond"]
-```
-
-</div>
 
 ---
 

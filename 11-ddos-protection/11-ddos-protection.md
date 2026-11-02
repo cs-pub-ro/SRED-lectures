@@ -855,18 +855,6 @@ Design questions:
 - is return traffic symmetric?
 - what happens to stateful middleboxes?
 
----
-
-# Review questions
-
-1. Why can local firewall filtering fail against volumetric DDoS?
-2. What resource does a SYN flood pressure?
-3. Why is reflection related to source spoofing?
-4. What is the trade-off of RTBH?
-5. Why are per-IP limits weak against a botnet?
-6. Why should application health be monitored alongside traffic volume?
-
----
 
 # Final checklist
 

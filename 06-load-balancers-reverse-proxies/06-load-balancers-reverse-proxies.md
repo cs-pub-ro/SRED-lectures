@@ -877,18 +877,6 @@ Students should ask:
 - can hardware acceleration or vectorized crypto help?
 - what is the rollback and compatibility plan?
 
----
-
-# Review questions
-
-1. What is the difference between L4 and L7 load balancing?
-2. Why is a reverse proxy not simple forwarding?
-3. What changes when TLS terminates at the proxy?
-4. Why must forwarding headers have a trust boundary?
-5. What do health checks actually prove?
-6. Why are timeouts security-relevant?
-
----
 
 # Final checklist
 

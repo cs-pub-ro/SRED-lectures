@@ -858,18 +858,6 @@ Practical IPsec questions:
 - which tunnels carry long-lived sensitive data?
 - how will interoperability be tested?
 
----
-
-# Review questions
-
-1. What is the difference between IKE and ESP?
-2. What does an SA represent?
-3. What does the SPD decide?
-4. Tunnel vs transport mode?
-5. Why is NAT-T needed?
-6. Why can a tunnel be up while application traffic still fails?
-
----
 
 # Final checklist
 

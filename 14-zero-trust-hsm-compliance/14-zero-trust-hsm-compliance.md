@@ -1216,20 +1216,6 @@ flowchart TB
 
 Security architecture is a loop, not a drawing.
 
----
-
-# Final review questions
-
-1. What is the difference between PDP and PEP?
-2. Why does network location no longer imply trust?
-3. Where can microsegmentation be enforced?
-4. Why are HSMs relevant to TLS inspection?
-5. What evidence would prove a firewall rule is controlled?
-6. How do NIS2 and DORA change engineering priorities?
-7. Why is third-party risk a technical architecture issue?
-8. What should happen when a security control fails?
-
----
 
 # Course closing
 

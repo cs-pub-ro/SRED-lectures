@@ -805,18 +805,6 @@ Students should ask:
 - what audit evidence exists?
 - what traffic must be exempted?
 
----
-
-# Review questions
-
-1. What is the difference between forward and reverse proxies?
-2. What does HTTP CONNECT do?
-3. What becomes visible only after TLS interception?
-4. Why is the organization's private CA high risk?
-5. How can QUIC or DoH affect proxy visibility?
-6. Why should servers have narrower egress than user browsers?
-
----
 
 # Final checklist
 

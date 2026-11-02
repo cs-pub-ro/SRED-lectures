@@ -808,18 +808,6 @@ flowchart LR
 
 They solve different problems.
 
----
-
-# Review questions
-
-1. Why is DNS an early enforcement point?
-2. What does RPZ do?
-3. What is the purpose of a sinkhole?
-4. Which behaviors can suggest DNS tunnelling?
-5. Why can DoH reduce network visibility?
-6. Why should recursive DNS be restricted to intended clients?
-
----
 
 # Final checklist
 
