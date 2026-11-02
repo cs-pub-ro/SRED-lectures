@@ -22,6 +22,9 @@ __Open-source tool:__ HAProxy
 
 A load balancer is primarily an availability/performance component, but its position makes it extremely important for security.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

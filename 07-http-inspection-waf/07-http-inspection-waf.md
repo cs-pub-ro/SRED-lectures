@@ -22,6 +22,9 @@ __Open-source stack:__ ModSecurity + OWASP Core Rule Set, with NGINX/Apache or r
 
 A WAF asks not only **who is connecting**, but **what HTTP request is being sent**.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

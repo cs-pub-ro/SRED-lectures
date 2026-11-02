@@ -22,6 +22,9 @@ __Open-source tool:__ OpenVPN Community Edition
 
 The lecture focuses on remote-access architecture, authentication, tunnel interfaces, routing, full/split tunnel policy, and operational failure modes.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

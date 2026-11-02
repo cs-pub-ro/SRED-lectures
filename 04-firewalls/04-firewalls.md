@@ -18,24 +18,20 @@ mdc: true
 
 ## Enforcing communication policy between security zones
 
-__Open-source lab stack:__ nftables, conntrack, Linux namespaces
-
-A firewall answers a deceptively simple question:
-
 > Should this communication be allowed?
+
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
 
 ---
 
 # Learning objectives
-
-You should be able to:
 
 - distinguish stateless and stateful filtering;
 - explain connection tracking;
 - design zone-based policy;
 - reason about rule order and defaults;
 - separate filtering from NAT;
-- implement and troubleshoot policy with nftables.
 
 ---
 
@@ -55,6 +51,66 @@ flowchart LR
 </div>
 
 The firewall becomes a choke point between trust zones.
+
+---
+
+# Hardware vs software firewalls
+
+| Form factor | Examples | Characteristics |
+|---|---|---|
+| **Dedicated hardware appliance** | Palo Alto PA series, Fortinet FortiGate, Cisco Firepower | Purpose-built ASICs; vendor-managed OS; high throughput |
+| **Software on commodity hardware** | pfSense, OPNsense, Linux nftables/iptables | Runs on standard x86/ARM servers; flexible, auditable; limited by CPU |
+| **Virtual appliance** | Same vendors, deployed as VMs or containers | Identical software, no dedicated hardware; used in virtualized/cloud environments |
+| **Cloud-native** | AWS Security Groups, GCP VPC firewall rules, Azure NSG | Managed by the cloud provider; integrated with cloud networking |
+
+---
+
+# From interfaces to zones
+
+**Problem:** when you add a new interface/redesign the network, every rule referencing the old interfaces must be rewritten.
+
+**Solution:** abstract interfaces into **security zones** — logical groups with a trust level:
+
+| Zone | Interfaces | Trust |
+|---|---|---|
+| **Internet** | eth0 | Untrusted |
+| **DMZ** | eth1, eth1.10 | Semi-trusted |
+| **Users** | eth2, eth2.20, eth2.30 | Trusted |
+| **Management** | eth3 | Highly trusted |
+
+Policy is written **zone-to-zone** ("Users → Internet: allow 443"). Adding a new VLAN to a zone automatically inherits all its rules.
+
+---
+
+# Zones
+
+<div style="transform: scale(0.8); transform-origin: top center;">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
+flowchart TB
+  INET["Internet"] --> FW["Firewall"]
+  FW --> DMZ["DMZ"]
+  FW --> USER["Users"]
+  FW --> DB["Database"]
+  FW --> MGMT["Management"]
+```
+
+</div>
+
+Think in **trust zones and required flows**, not just interfaces.
+
+---
+
+# Firewall types
+
+| Type | Inspects | State | Use case |
+|---|---|---|---|
+| **Stateless (packet filter)** | IP header, ports, flags | None — each packet independently | High-speed ACLs, hardware routers |
+| **Stateful** | IP header, ports, flags + **connection state** | Tracks flows (conntrack) | Standard perimeter/internal firewalls |
+| **Application-layer (L7 / NGFW)** | All of the above + **application content** | Flow + protocol decode | Deep inspection, IPS, URL filtering |
+
+Each type builds on the previous — stateful needs everything stateless does, plus memory; L7 needs everything stateful does, plus protocol parsers.
 
 ---
 
@@ -107,6 +163,54 @@ This says nothing about whether the packet belongs to an already-established con
 
 ---
 
+# How stateless filtering works — pattern matching
+
+A stateless filter sees each packet as a **fixed-layout bit string**. The IP and TCP/UDP headers provide well-known fields at known offsets:
+
+```text
+IP header (simplified):
+┌────────────────────┬────────────────────┐
+│   Source IP (32b)  │     Dest IP (32b)  │
+└────────────────────┴────────────────────┘
+         ↓                     ↓
+  match against rule     match against rule
+```
+
+The filter compares header fields against a **template** (pattern) — if the packet matches the pattern, the rule's action applies.
+
+This is exactly how an Access Control List (ACL) works on a router.
+
+---
+
+# Masks — selecting which bits matter
+
+A **mask** lets a rule ignore certain bits during comparison.
+
+| Field | Value in rule | Mask | Effect |
+|---|---|---|---|
+| Source IP | `10.0.0.0` | `255.0.0.0` (/8) | Matches any `10.x.x.x` |
+| Source IP | `192.168.1.0` | `255.255.255.0` (/24) | Matches `192.168.1.0–255` |
+| Source IP | `10.0.0.5` | `255.255.255.255` (/32) | Matches exactly `10.0.0.5` |
+| Dest port | `443` | (exact) | Matches only HTTPS |
+
+---
+
+# Masks — selecting which bits matter
+
+```text
+Packet src:   10.0.0.42       = 00001010.00000000.00000000.00101010
+Mask /8:      255.0.0.0       = 11111111.00000000.00000000.00000000
+                                ────────
+                                only these 8 bits are compared
+Rule value:   10.0.0.0        = 00001010.00000000.00000000.00000000
+                                ^^^^^^^^
+                                match → rule applies
+```
+
+The wider the mask (fewer 1-bits), the more traffic a single rule matches.
+
+---
+
 # Stateful filtering
 
 <div style="transform: scale(0.8); transform-origin: top center;">
@@ -129,22 +233,71 @@ State turns many packet-level rules into flow-level policy.
 
 # TCP connection state
 
-Simplified view:
-
-<div style="transform: scale(0.8); transform-origin: top center;">
+<div style="transform: scale(0.65); transform-origin: top center;">
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-stateDiagram-v2
-  [*] --> New
-  New --> Established: handshake accepted
-  Established --> Closing: FIN/RST
-  Closing --> [*]
+sequenceDiagram
+  participant C as Client
+  participant S as Server
+  Note over C,S: Connection establishment (3-way handshake)
+  C->>S: SYN (seq=x)
+  Note right of C: ← This first packet has the SYN flag set → state NEW
+  S->>C: SYN+ACK (seq=y, ack=x+1)
+  C->>S: ACK (ack=y+1)
+  Note over C,S: state → ESTABLISHED
+  C->>S: PSH+ACK (data)
+  S->>C: ACK
 ```
 
 </div>
 
-The firewall tracks enough metadata to recognize return traffic.
+---
+
+# TCP connection state
+
+<div style="transform: scale(0.65); transform-origin: top center;">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
+sequenceDiagram
+  participant C as Client
+  participant S as Server
+  Note over C,S: Connection teardown
+  C->>S: FIN+ACK
+  S->>C: FIN+ACK
+  C->>S: ACK
+  Note over C,S: state → CLOSED
+```
+</div>
+
+---
+
+# Pseudo-state for UDP and ICMP
+
+TCP has explicit flags (SYN, FIN, RST) that signal connection lifecycle. **UDP and ICMP have no such flags** — they are connectionless.
+
+Yet stateful firewalls still track them using **pseudo-state** based on timers:
+
+| Protocol | How NEW is detected | How ESTABLISHED works | Timeout |
+|---|---|---|---|
+| **TCP** | SYN flag in first packet | Completed handshake; bidirectional traffic | Minutes (established) |
+| **UDP** | First packet on src:port → dst:port | Reply seen from dst:port → src:port | 30–180 s (varies) |
+| **ICMP** | Echo Request (type 8) | Echo Reply (type 0) matches request identifier | 30 s |
+
+---
+
+# Pseudo-state for UDP and ICMP
+
+**Example — DNS query (UDP):**
+
+```text
+1. Client 10.0.0.5:51234 → 8.8.8.8:53   → conntrack creates NEW entry
+2. Server 8.8.8.8:53 → 10.0.0.5:51234   → matches entry → ESTABLISHED
+3. No more packets → timer expires → entry removed
+```
+
+Without pseudo-state, the firewall would need an explicit rule to allow DNS replies — just like a stateless filter.
 
 ---
 
@@ -175,26 +328,6 @@ This state is both useful and a resource an attacker may try to exhaust.
 
 ---
 
-# Zones
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart TB
-  INET["Internet"] --> FW["Firewall"]
-  FW --> DMZ["DMZ"]
-  FW --> USER["Users"]
-  FW --> DB["Database"]
-  FW --> MGMT["Management"]
-```
-
-</div>
-
-Think in **trust zones and required flows**, not just interfaces.
-
----
-
 # Build policy from requirements
 
 Example:
@@ -212,34 +345,51 @@ Every allow should have a reason.
 
 ---
 
-# Default deny
+# Default policy — allowlist vs blocklist
 
-<div style="transform: scale(0.8); transform-origin: top center;">
+The **last rule** in a firewall policy defines its fundamental philosophy:
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  P["Traffic"] --> E{"Explicitly required?"}
-  E -->|Yes| A["Allow"]
-  E -->|No| D["Deny"]
-```
+| Approach | Last rule | Also called | Philosophy |
+|---|---|---|---|
+| **Allowlist** | `deny any any` | Default deny, whitelist | Only explicitly permitted traffic passes |
+| **Blocklist** | `allow any any` | Default allow, blacklist | Only explicitly blocked traffic is dropped |
 
-</div>
+---
 
-This reduces dependence on predicting every future attack.
+# Default policy — allowlist vs blocklist
+
+**Allowlist (default deny)** — the standard for perimeter firewalls:
+- You must know and enumerate every required flow
+- Unknown traffic is blocked → safer, but requires more upfront work
+- A missing rule = broken service (fail-closed)
+
+**Blocklist (default allow)** — sometimes used internally or during migration:
+- You enumerate known-bad traffic (malicious IPs, dangerous ports)
+- Unknown traffic passes → simpler to deploy, but any oversight = exposure
+- A missing rule = potential breach (fail-open)
+
+Most firewalls default to **deny any** at the end of a chain.
 
 ---
 
 # Rule order
 
-Rules are often evaluated top to bottom.
+Rules are often evaluated top to bottom — **first match wins**.
 
 ```text
-1 allow 10.0.0.0/8 -> server
-2 deny  10.0.0.50 -> server
+1 deny  10.0.0.50       -> server  tcp/443
+2 allow 10.0.0.0/24     -> server  tcp/443
+3 allow 192.168.0.0/16  -> server  tcp/22
+4 deny  any              -> server  tcp/22
+5 allow any              -> server  tcp/443
 ```
 
-If rule 1 matches first, rule 2 never protects the server from `10.0.0.50`.
+- `10.0.0.50` trying HTTPS → hits rule 1 (deny) ✓
+- `10.0.0.42` trying HTTPS → hits rule 2 (allow) ✓
+- `192.168.1.5` trying SSH → hits rule 3 (allow) ✓
+- `8.8.8.8` trying SSH → skips 1–3, hits rule 4 (deny) ✓
+- `8.8.8.8` trying HTTPS → skips 1–4, hits rule 5 (allow) ✓
+
 
 ---
 
@@ -259,7 +409,78 @@ flowchart LR
 
 </div>
 
+**If rules 1 and 2 were swapped**, `10.0.0.50` would match the broad allow first — the deny would never fire.
+
 Policy review should detect shadowing.
+
+---
+
+# Intra-firewall anomalies — formal taxonomy
+
+Shadowing is one of **five** formal anomalies between any two rules $R_x$ (earlier) and $R_y$ (later) in the same firewall:
+
+| Anomaly | Predicate relation | Actions | Severity |
+|---|---|---|---|
+| **Shadowing** | $R_y \subseteq R_x$ | opposite | **Critical** — $R_y$ is unreachable |
+| **Generalization** | $R_x \subset R_y$ | opposite | **Warning** — $R_x$ is a narrow exception carved out of $R_y$; deleting $R_x$ silently changes posture |
+| **Correlation** | $R_x \cap R_y \neq \emptyset$, neither subset | opposite | **Ambiguous** — packets in the intersection match $R_x$; reordering changes behavior |
+
+---
+
+# Intra-firewall anomalies — formal taxonomy
+
+Shadowing is one of **five** formal anomalies between any two rules $R_x$ (earlier) and $R_y$ (later) in the same firewall:
+
+| Anomaly | Predicate relation | Actions | Severity |
+|---|---|---|---|
+| **Redundancy** | $R_y \subseteq R_x$ or $R_x \subseteq R_y$ | same | **Bloat** — removing the redundant rule changes nothing |
+| **Irrelevance** | Rule matches no routable traffic | any | **Rot** — increases audit burden without filtering packets |
+
+> Al-Shaer, E. and Hamed, H., *"Discovery of Policy Anomalies in Distributed Firewalls"*, IEEE INFOCOM 2004.
+
+---
+
+# Generalization and correlation — examples
+
+**Generalization** (our Rule order slide is exactly this):
+
+```text
+1 deny  10.0.0.50       -> server  tcp/443    ← narrow exception
+2 allow 10.0.0.0/24     -> server  tcp/443    ← broad rule
+```
+
+This is **correct but fragile** — if someone deletes rule 1, all of `10.0.0.0/24` is suddenly allowed.
+
+**Correlation** (two rules overlap on different dimensions):
+
+```text
+1 allow 10.0.0.0/24     -> any           tcp/any
+2 deny  any              -> 192.168.1.10  tcp/22
+```
+
+A packet from `10.0.0.5 → 192.168.1.10:22` is in the **intersection** — it matches rule 1 (allow by source) before rule 2 can deny it by destination. Neither rule is a subset of the other, so reordering either one changes the security outcome.
+
+---
+
+# Inter-firewall (distributed) anomalies
+
+When traffic crosses **multiple firewalls** (perimeter → internal), a new class of anomalies emerges:
+
+| Anomaly | Upstream $FW_A$ | Downstream $FW_B$ | Problem |
+|---|---|---|---|
+| **Distributed shadowing** | deny tcp/5432 | allow Internet → DB tcp/5432 | $FW_B$'s allow is **unreachable** — $FW_A$ already dropped it |
+| **Spuriousness** | allow Internet → DB tcp/5432 | deny Internet → DB tcp/5432 | Unauthorized traffic **transits the perimeter** and internal links before $FW_B$ blocks it |
+
+**Spuriousness** is particularly dangerous: the perimeter allows traffic it should block, relying entirely on an internal firewall. If the internal firewall is misconfigured or bypassed, the flow reaches the target unchallenged.
+
+---
+
+# Inter-firewall (distributed) anomalies
+
+| Anomaly | Upstream $FW_A$ | Downstream $FW_B$ | Problem |
+|---|---|---|---|
+| **Distributed redundancy** | deny tcp/5432 | deny tcp/5432 | **Defense-in-depth** (intentional) or wasted rules (unintentional) |
+| **Distributed correlation** | Partial overlap with opposing actions across $FW_A$ and $FW_B$ | | Multi-hop ambiguity — behavior depends on which firewall sees which dimension |
 
 ---
 
@@ -291,21 +512,30 @@ Compromise should not automatically equal unrestricted egress.
 
 ---
 
-# East-west filtering
+# North-south vs east-west traffic
 
-<div style="transform: scale(0.8); transform-origin: top center;">
+<div style="transform: scale(0.7); transform-origin: top center;">
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  APP["App subnet"] --> FW["Internal firewall"]
-  FW --> DB["DB subnet"]
-  USER["User subnet"] --> FW
+flowchart TB
+  INET["Internet"]
+  INET <-->|"North-south"| FW["Perimeter firewall"]
+  FW <--> INT["Internal network"]
+  subgraph INT[" "]
+    APP["App subnet"] <-->|"East-west"| IFW["Internal firewall"]
+    IFW <-->|"East-west"| DB["DB subnet"]
+    USER["User subnet"] <-->|"East-west"| IFW
+  end
 ```
 
 </div>
 
-Perimeter-only security assumes internal networks are trustworthy. Modern environments often need internal segmentation too.
+**North-south** — traffic crossing the perimeter (Internet ↔ internal). This is where traditional firewalls sit.
+
+**East-west** — traffic moving laterally between internal zones. Often **unfiltered** in legacy networks — once an attacker breaches the perimeter, they move freely.
+
+Modern security requires filtering **both directions**. An internal firewall or micro-segmentation prevents a compromised web server from reaching the database directly.
 
 ---
 
@@ -396,11 +626,29 @@ Preserve useful attribution through:
 
 # RELATED traffic
 
-Some protocols create secondary flows related to an initial connection.
+Some protocols negotiate **secondary flows** dynamically inside the primary connection. The firewall must understand the application protocol to link the new flow back to the original.
 
-Connection tracking may classify them as `RELATED`.
+**Example — FTP active mode:**
 
-This is convenient, but helpers and protocol awareness expand complexity. Enable only what the environment needs.
+<div style="transform: scale(0.7); transform-origin: top center;">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
+sequenceDiagram
+  participant C as Client
+  participant F as FTP Server
+  C->>F: TCP/21 — control channel (ESTABLISHED)
+  C->>F: PORT 10.0.0.5,200,5 (= "connect back to me on port 51205")
+  Note over F,C: Conntrack helper (nf_conntrack_ftp) parses the PORT command
+  F->>C: TCP src:20 → dst:51205 — data channel
+  Note over C: State = RELATED (not NEW) → allowed by "accept established,related"
+```
+
+</div>
+
+Without the conntrack helper, the server's inbound data connection would look like an **unsolicited NEW connection** and be dropped by default-deny policy.
+
+Other protocols with RELATED flows: SIP (voice/video media ports), TFTP, PPTP. Enable helpers **only** for protocols actually in use — each one adds parsing complexity and attack surface.
 
 ---
 
@@ -498,101 +746,9 @@ Logging every packet can create cost without insight.
 
 ---
 
-# Open-source firewall: nftables
-
-nftables provides:
-
-- packet filtering;
-- stateful rules;
-- NAT;
-- sets/maps;
-- counters;
-- IPv4/IPv6 support.
-
-It exposes the mechanics without hiding them behind a vendor UI.
-
----
-
-# nftables processing model
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart TB
-  IN["Ingress packet"] --> HOOK["Netfilter hook"]
-  HOOK --> RULES["nftables chain"]
-  RULES --> CT["conntrack / NAT state"]
-  CT --> ROUTE["Forward / local delivery"]
-```
-
-</div>
-
-Students should understand the flow before memorizing syntax.
-
----
-
-# Minimal stateful policy
-
-```text
-ct state invalid drop
-ct state established,related accept
-
-iifname "lan0" oifname "wan0" tcp dport 443 accept
-counter drop
-```
-
-Use counters to verify which rules are exercised.
-
----
-
-# Sets make policy readable
-
-```text
-set web_servers {
-  type ipv4_addr
-  elements = { 10.20.0.10, 10.20.0.11 }
-}
-```
-
-Then match the set rather than duplicating addresses across many rules.
-
----
-
-# Lab topology
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  INET["Internet namespace"] --> FW["Linux firewall"]
-  FW --> DMZ["Web namespace"]
-  FW --> INT["User namespace"]
-  FW --> DB["DB namespace"]
-```
-
-</div>
-
-Students can test every permitted and denied flow directly.
-
----
-
-# Lab progression
-
-1. Route everything with no firewall.
-2. Add default deny.
-3. Allow required flows.
-4. Add stateful return traffic.
-5. Add DNAT for the web service.
-6. Add restricted egress.
-7. Observe counters and logs.
-
----
-
 # Troubleshooting order
 
-<div style="transform: scale(0.8); transform-origin: top center;">
+<div style="transform: scale(0.6); transform-origin: top center;">
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
@@ -606,22 +762,6 @@ flowchart TD
 ```
 
 </div>
-
----
-
-# Policy review questions
-
-For each allow rule:
-
-- Who needs it?
-- To which destination?
-- Which service?
-- From which zone?
-- Is the direction correct?
-- Is there an owner?
-- Is it still required?
-
-Firewall policy accumulates technical debt.
 
 ---
 
@@ -687,40 +827,6 @@ Security principle:
 
 ---
 
-# Design scenario
-
-Requirements:
-
-- Internet users reach web servers on HTTPS.
-- Web servers reach database on PostgreSQL.
-- Employees browse the web.
-- Only admins reach management.
-- Database has no arbitrary Internet access.
-
-Build the smallest understandable policy.
-
----
-
-# Possible flow graph
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart TB
-  NET["Internet"] -->|"443"| WEB["Web DMZ"]
-  WEB -->|"5432"| DB["Database"]
-  USERS["Users"] -->|"443"| NET
-  ADM["Admins"] -->|"management"| MGMT["Infrastructure"]
-  DB -.->|"deny arbitrary egress"| NET
-```
-
-</div>
-
-If a flow is not drawn, why should it be allowed?
-
----
-
 # Common mistakes
 
 - `any any allow`
@@ -745,25 +851,6 @@ A firewall cannot by itself decide:
 - whether an email attachment contains malware.
 
 Other layers exist for those questions.
-
----
-
-# Mental model
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  Z1["Source zone"] --> CT["Connection state"]
-  CT --> POL["Policy"]
-  POL --> NAT["Translation if needed"]
-  NAT --> Z2["Destination zone"]
-```
-
-</div>
-
-Always reason about direction and return traffic.
 
 ---
 
@@ -794,42 +881,18 @@ The architecture must prevent the slow path from becoming the bottleneck.
 
 ---
 
-# Software firewall lesson: measure the feature cost
+# Beyond L3/L4 — what comes next
 
-Even with open-source tools, feature choice changes throughput.
+This lecture covered **stateless and stateful firewalling** — decisions based on IP addresses, ports, and connection state.
 
-<div style="transform: scale(0.8); transform-origin: top center;">
+But a firewall that only sees headers cannot answer deeper questions:
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart TB
-  A[nftables rules] --> B[conntrack]
-  B --> C[logging]
-  C --> D[Suricata inline]
-  D --> E[TLS proxying]
-  E --> F[throughput and latency impact]
-```
+- **Is this HTTP request an SQL injection?** → Web Application Firewall (WAF)
+- **Does this traffic match a known exploit signature?** → IDS/IPS
+- **Is a user uploading confidential documents?** → Data Loss Prevention (DLP)
+- **Which application is really using port 443?** → Deep Packet Inspection (DPI) / NGFW
 
-</div>
-
-Teaching experiment:
-
-1. forward packets with basic filtering;
-2. enable connection tracking;
-3. add IPS inspection;
-4. add TLS termination elsewhere;
-5. measure latency, drops, and CPU.
-
----
-
-# Review questions
-
-1. What is the difference between stateless and stateful filtering?
-2. Why does rule order matter?
-3. Why should the default policy usually be deny?
-4. Why is NAT not a firewall?
-5. What breaks stateful filtering in asymmetric paths?
-6. Why does HTTPS limit application visibility?
+These **Layer 7 inspection** topics will be covered in dedicated upcoming lectures (IDS/IPS, WAF, Secure Web Gateway).
 
 ---
 

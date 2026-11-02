@@ -22,6 +22,9 @@ __Open-source stack:__ FastNetMon Community, nftables, Linux traffic control, FR
 
 DDoS is the lecture where **placement and capacity** matter as much as filtering logic.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

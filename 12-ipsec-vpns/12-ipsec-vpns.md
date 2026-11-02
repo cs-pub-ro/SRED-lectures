@@ -22,6 +22,9 @@ __Open-source tool:__ strongSwan
 
 We will treat cryptography as an implementation primitive and focus on architecture: peers, policies, Security Associations, IKE, ESP, routing, and failure modes.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

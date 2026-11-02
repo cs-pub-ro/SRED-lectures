@@ -22,6 +22,9 @@ __Open-source tool:__ Squid
 
 A reverse proxy protects services we publish. A forward proxy controls clients when they access services elsewhere.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

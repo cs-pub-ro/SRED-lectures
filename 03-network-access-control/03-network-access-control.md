@@ -20,6 +20,9 @@ mdc: true
 
 NAC moves the question from **which port is active?** to **which user/device should receive which access?**
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

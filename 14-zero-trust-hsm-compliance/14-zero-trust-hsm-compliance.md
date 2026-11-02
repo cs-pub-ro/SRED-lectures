@@ -39,6 +39,9 @@ flowchart LR
 
 </div>
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

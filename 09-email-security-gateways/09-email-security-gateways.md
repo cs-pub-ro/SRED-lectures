@@ -22,6 +22,9 @@ __Open-source stack:__ Postfix, Rspamd, ClamAV, OpenDKIM/OpenDMARC where useful
 
 Email security is a good example of deep inspection because the gateway can examine an entire message before delivery.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

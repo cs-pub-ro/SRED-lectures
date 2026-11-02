@@ -22,6 +22,9 @@ __Open-source stack:__ Suricata, Zeek, tcpdump
 
 Firewalls decide what is permitted. Detection systems ask whether permitted or observed traffic is **suspicious**.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

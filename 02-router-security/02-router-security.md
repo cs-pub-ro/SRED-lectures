@@ -20,6 +20,9 @@ mdc: true
 
 Routers decide where packets go. Secure routers decide **where packets are allowed to go**.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

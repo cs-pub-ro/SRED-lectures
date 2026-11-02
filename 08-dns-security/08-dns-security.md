@@ -22,6 +22,9 @@ __Open-source stack:__ Unbound, RPZ, dnsmasq for labs, Zeek/Suricata for visibil
 
 DNS is both critical infrastructure and a valuable place to block malicious destinations early.
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives

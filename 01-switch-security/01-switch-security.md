@@ -18,6 +18,9 @@ mdc: true
 
 ## Layer 2 as a security boundary
 
+
+**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+
 ---
 
 # Learning objectives
