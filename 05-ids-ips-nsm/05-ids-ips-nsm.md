@@ -18,12 +18,10 @@ mdc: true
 
 ## Detecting malicious behavior in traffic
 
-__Open-source stack:__ Suricata, Zeek, tcpdump
-
 Firewalls decide what is permitted. Detection systems ask whether permitted or observed traffic is **suspicious**.
 
 
-**Mihai Chiroiu** · © Network Security Using Dedicated Devices
+**Mihai Chiroiu** © Network Security Using Dedicated Devices
 
 ---
 
@@ -34,8 +32,6 @@ You should be able to:
 - distinguish IDS, IPS, and NSM;
 - compare passive and inline deployment;
 - explain signatures and protocol-aware detection;
-- use Suricata rule concepts;
-- explain Zeek's event/log model;
 - reason about false positives, tuning, and encrypted traffic.
 
 ---
@@ -76,7 +72,13 @@ Advantages:
 - cannot normally break the traffic path;
 - easy to deploy.
 
-Limitation: it usually cannot directly stop the observed packet.
+Limitation: it cannot **drop** the initial offending packet (already forwarded on the wire).
+
+However, a passive IDS can still perform **Active Response**:
+- inject forged **TCP RST** packets toward both endpoints (**sequence strafing** — multiple RSTs with different sequence numbers to land inside the receiver's sliding window)
+- trigger automated **firewall API blocks** (e.g., Wazuh active response + nftables timed address sets)
+
+The *session* can be terminated — only the first packet escapes.
 
 ---
 
@@ -94,11 +96,11 @@ flowchart LR
 
 Possible actions:
 
-- pass;
-- drop;
-- reject;
-- alert;
-- rate limit in some designs.
+- **pass** — allow without alerting;
+- **drop** — silently discard the packet (inline only);
+- **reject** — drop + send TCP RST or ICMP unreachable to endpoints (inline: inserted in-stream; passive: injected out-of-band via sequence strafing);
+- **alert** — log the event;
+- **rate limit** — throttle in some designs.
 
 The security sensor is now also an availability dependency.
 
@@ -138,6 +140,8 @@ flowchart LR
 
 A TAP is purpose-built for observation and can provide more predictable visibility than a switch mirror.
 
+**Full-duplex caveat:** a link at speed $N$ carries up to $2N$ aggregate traffic (TX + RX). An **aggregation TAP** that merges both directions onto a single $N$-speed sensor NIC will drop packets when bidirectional utilization exceeds 50%. Solutions: dual capture NICs receiving separate TX/RX feeds, or a dedicated **Network Packet Broker** (NPB).
+
 ---
 
 # Visibility determines detection
@@ -152,6 +156,7 @@ Ask:
 - before or after TLS termination?
 - one VLAN or many?
 - packet loss at the sensor?
+- **asymmetric routing?** (sensor sees only one direction of a flow → breaks stateful stream reassembly)
 
 ---
 
@@ -223,6 +228,20 @@ Protocol-aware inspection reduces ambiguity and makes rules more semantically me
 
 ---
 
+# Evasion theory — insertion and evasion attacks
+
+A sensor reconstructs the packet stream **independently** from the target host — different network stacks may disagree on reassembly.
+
+**Insertion attack** (Ptacek & Newsham 1998): the IDS **accepts** bytes the target **rejects** (e.g., a segment with a TTL too short to reach the target, or a bad IP checksum). The IDS reassembles a different stream than the target, and the malicious signature does not match.
+
+**Evasion attack**: the IDS **rejects** bytes the target **accepts** (e.g., OS-specific overlapping TCP segment reassembly policies — some OSes keep the first overlapping data, others keep the last). The exploit is reconstructed only on the target.
+
+Peak complexity arises with overlapping IP fragments and TCP segments carrying conflicting payloads — the sensor cannot know which interpretation the target will use (Handley & Paxson 2001).
+
+**Inline IPS solves this via traffic normalization** — scrubbing ambiguities before forwarding: drop invalid header lengths, normalize TTL, resolve overlapping segments with a single deterministic policy.
+
+---
+
 # Suricata
 
 Suricata is an open-source engine for:
@@ -234,58 +253,44 @@ Suricata is an open-source engine for:
 - JSON event output;
 - signature rules.
 
-It is a strong teaching platform because packet, flow, protocol, and rule concepts are visible.
-
----
-
-# Simplified Suricata pipeline
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  PKT["Packets"] --> FLOW["Flow tracking"]
-  FLOW --> APP["Protocol parsing"]
-  APP --> RULE["Detection rules"]
-  RULE --> EVE["EVE JSON / alert"]
-```
-
-</div>
-
-The real engine is more complex, but this model is enough for architecture reasoning.
 
 ---
 
 # Rule anatomy
 
-A simplified Suricata-style rule:
+An idiomatic Suricata rule:
 
 ```text
-alert http any any -> $HOME_NET any (
-  msg:"Suspicious admin path";
-  http.uri; content:"/admin";
-  sid:1000001;
+alert http $EXTERNAL_NET any -> $HOME_NET any (
+  msg:"LOCAL Suspicious Admin URI Path Access";
+  flow:established,to_server;
+  http.uri; content:"/admin"; startswith; nocase;
+  classtype:web-application-activity;
+  sid:1000001; rev:1;
 )
 ```
 
-Teach the structure, not memorization.
+`flow:established,to_server` limits inspection to client requests inside an established TCP session — skipping SYN floods and server replies.
 
 ---
 
-# Rule fields to understand
+# Rule fields
 
-Students should recognize:
+The **rule header** is a 7-tuple:
 
-- action;
-- protocol;
-- source/destination;
-- direction;
-- message;
-- content/protocol keywords;
-- unique rule ID.
+| Field | Example |
+|---|---|
+| Action | `alert` |
+| Protocol | `http` |
+| Source IP | `$EXTERNAL_NET` |
+| Source port | `any` |
+| Direction | `->` |
+| Destination IP | `$HOME_NET` |
+| Destination port | `any` |
 
-The crucial question is always: **what exact behavior causes the alert?**
+**Sticky buffers:** `http.uri` switches the inspection buffer for all subsequent `content` keywords — they match against the normalized URI, not the raw packet payload.
+
+**MPM pre-filter:** the engine marks one `content` per rule as the `fast_pattern` anchor. A single Aho–Corasick pass finds candidate rules; only those rules are fully evaluated — the engine does **not** test 50 000 rules sequentially.
 
 ---
 
@@ -307,6 +312,44 @@ sequenceDiagram
 ```
 
 </div>
+
+---
+
+# IPS buffering — the latency cost
+
+An **IPS** sits **inline** — it must decide before forwarding. To inspect a full flow, the IPS buffers packets:
+
+```text
+Packet arrives → buffer → reassemble stream → match rules → forward or drop
+                  ╰─────── added latency ──────╯
+```
+
+| Inspection depth | What is buffered | Typical delay |
+|---|---|---|
+| Single packet | Just headers + payload | µs–low ms |
+| Stream reassembly | Multiple TCP segments | ms |
+| Full protocol decode | HTTP request body, file content | ms–tens of ms |
+| File extraction + cloud ML | Stream hash + rapid ML verdict | ms–low seconds (fails open on timeout) |
+
+Full behavioral sandboxing (VM detonation) is performed **asynchronously out-of-band** — the sensor forwards packets and submits a file copy; if the sandbox later convicts the file, a reactive signature or block is distributed. Holding an entire file inline for minutes would exhaust TCP RTO timers and sensor memory.
+
+A true multi-minute inline hold requires an **Explicit Proxy** (L7 termination), which is architecturally different from packet-level IPS buffering.
+
+---
+
+# High-speed sensor architecture
+
+Why sensors drop packets under load — and how to prevent it.
+
+**Packet acquisition (Linux):**
+- **AF_PACKET** — zero-copy ring-buffer capture; used in IPS bridge mode or passive TAP mode
+- **NFQUEUE** — nftables/iptables delivers packets to userspace; supports fail-open bypass if the sensor process dies
+
+**Symmetric flow distribution:** both directions of a TCP/UDP flow must land on the **same worker thread** (CPU core) — otherwise stateful stream reassembly breaks. Suricata's `cluster_flow` mode hashes on the 5-tuple to guarantee this.
+
+**Multi-Pattern Matching (MPM):** the engine does **not** evaluate 50 000 rules sequentially. One `content` keyword per rule is designated `fast_pattern`. A single **Aho–Corasick** pass over each buffer finds all candidate rules in $O(n)$; only matching candidates are fully evaluated.
+
+**Workers mode:** each packet-capture thread runs its own detection engine — no locking, linear horizontal scaling across CPU cores.
 
 ---
 
@@ -357,8 +400,6 @@ Too many false positives lead to:
 - disabled rules;
 - missed real incidents.
 
-Precision is an operational security property.
-
 ---
 
 # False negatives
@@ -378,17 +419,26 @@ Silence does not prove safety.
 
 ---
 
-# Tuning
+# The Base-Rate Fallacy
 
-Good tuning asks:
+Analysts confuse detection rate (TPR) with **precision** — *given an alarm, how likely is it a true attack?* (Axelsson 1999).
 
-- Is the vulnerable software actually present?
-- Is this service reachable?
-- Is the pattern normal in this network?
-- Which assets are critical?
-- Does the signature have useful context?
+$$
+P(\text{Attack} \mid \text{Alarm}) = \frac{P(\text{Alarm}\mid\text{Attack}) \cdot P(\text{Attack})}{P(\text{Alarm}\mid\text{Attack}) \cdot P(\text{Attack}) + P(\text{Alarm}\mid\neg\text{Attack}) \cdot P(\neg\text{Attack})}
+$$
 
-Tune by understanding, not merely suppressing noise.
+**Worked example:** 10 000 events, 100 attacks (1% base rate), 99% TPR, 1% FPR:
+
+| | Alarm | No alarm |
+|---|---|---|
+| Attack (100) | 99 TP | 1 FN |
+| Benign (9 900) | 99 FP | 9 801 TN |
+
+Precision = 99 / (99 + 99) = **50%** — half the alarms are false.
+
+At network-flow scale ($P(\text{Attack}) \ll 0.01\%$), precision drops near zero unless FPR is negligibly small.
+
+**Practical tuning:** write **narrow suppressions** (scoped to source/destination/port/time window) before raising global thresholds. Quantitative calibration: $3\sigma$ anomaly threshold ≈ 389 false alerts/day across 500 metrics; $4\sigma$ ≈ 9/day.
 
 ---
 
@@ -498,6 +548,21 @@ Zeek can help reconstruct this chain.
 
 ---
 
+# Correlating Suricata, Zeek, and HIDS
+
+A modern SOC correlates **Suricata** alerts (`eve.json`) with **Zeek** logs (`conn.log`, `dns.log`, `ssl.log`) using a shared flow identifier — Suricata's `community_id` or Zeek's `uid`.
+
+**Pivot workflow:** a single signature alert → look up the flow's full DNS resolution, HTTP transactions, TLS certificate chain, and any extracted files. One alert becomes a complete narrative.
+
+**HIDS integration:** host-based agents (Wazuh / OSSEC) can:
+- ingest Suricata `eve.json` as a log source
+- monitor host-level logs, file integrity, and running processes
+- see **cleartext** regardless of network encryption
+
+**Unified dashboard:** network alert + host-level process/auth telemetry + coordinated active response (e.g., Suricata alerts → Wazuh triggers nftables block + host forensic snapshot).
+
+---
+
 # Behavioral detection
 
 Instead of matching a known payload, detect patterns such as:
@@ -544,8 +609,11 @@ A passive sensor may still observe:
 - timing;
 - sizes;
 - TLS handshake metadata;
-- certificate information where visible;
 - DNS around the connection.
+
+**TLS 1.3** encrypts all handshake messages after ServerHello — server certificates are no longer visible on the wire (unlike TLS 1.2). **Encrypted Client Hello (ECH)** additionally encrypts the SNI field, removing the last plaintext domain indicator.
+
+**QUIC / HTTP/3** encapsulates TLS 1.3 over **UDP**, bypassing TCP-based flow rules and many legacy DPI engines entirely.
 
 ---
 
@@ -565,32 +633,9 @@ flowchart LR
 
 Sensor placement relative to decryption changes what can be inspected.
 
----
+**Caveat:** if backend traffic is **re-encrypted** (mTLS between proxy and application, Zero Trust east-west), a passive wire sensor between proxy and application still sees ciphertext.
 
-# QUIC and protocol evolution
-
-Modern protocols can reduce traditional network visibility.
-
-Security teams must adapt by combining:
-
-- network metadata;
-- endpoint telemetry;
-- server/proxy logs;
-- identity data.
-
-A single network sensor is no longer omniscient.
-
----
-
-# Evasion and normalization
-
-Different endpoints may interpret ambiguous protocol input differently.
-
-An attacker may exploit parser differences.
-
-Principle:
-
-> Detection should normalize and parse traffic as consistently as possible with the protected endpoint.
+Solutions: host-level **eBPF** tap on the application's TLS library, **SSLKEYLOGFILE** export to the sensor for passive decryption, or a dedicated **SSL visibility appliance** that brokers keys.
 
 ---
 
@@ -626,54 +671,6 @@ The right answer depends on the protected service.
 
 ---
 
-# Suricata lab topology
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  ATT["Attacker namespace"] --> SW["OVS / bridge"] --> WEB["Web namespace"]
-  SW -.-> SUR["Suricata IDS"]
-```
-
-</div>
-
-Generate benign and suspicious requests and compare network traffic with alerts.
-
----
-
-# Simple lab rule
-
-Example teaching rule:
-
-```text
-alert http any any -> any any (
-  msg:"Training path requested";
-  http.uri;
-  content:"/secret-training";
-  sid:1000002;
-)
-```
-
-The point is to see how application-aware matching differs from raw packet filtering.
-
----
-
-# Zeek lab
-
-Capture the same traffic and ask students to identify:
-
-- connection record;
-- DNS lookup;
-- HTTP request;
-- TLS metadata if HTTPS is used;
-- transferred file metadata if available.
-
-One packet trace becomes an **investigation timeline**.
-
----
-
 # Rule lifecycle
 
 <div style="transform: scale(0.8); transform-origin: top center;">
@@ -706,42 +703,6 @@ Useful questions:
 - How quickly are high-confidence alerts triaged?
 
 Raw alert count is a poor success metric.
-
----
-
-# Design scenario
-
-You have:
-
-- Internet-facing web service;
-- employee VLAN;
-- database VLAN;
-- TLS reverse proxy;
-- internal DNS.
-
-Where would you place sensors, and what would each location reveal?
-
----
-
-# Possible sensor placement
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart TB
-  NET["Internet"] --> FW["Firewall"] --> RP["TLS reverse proxy"] --> APP["App"] --> DB["DB"]
-  FW -.-> S1["Sensor 1
-perimeter metadata"]
-  RP -.-> S2["Sensor 2
-post-termination"]
-  CORE["Internal switch"] -.-> S3["Sensor 3
-east-west"]
-```
-
-</div>
-
-Different sensors answer different questions.
 
 ---
 
@@ -791,30 +752,6 @@ flowchart LR
 
 ---
 
-# Expert augmentation: IDS after TLS 1.3
-
-Passive sensors usually cannot decrypt modern TLS sessions.
-
-<div style="transform: scale(0.8); transform-origin: top center;">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000'}}}%%
-flowchart LR
-  C[Client] == TLS 1.3 with PFS ==> S[Server]
-  C -. metadata copy .-> IDS[Sensor]
-  IDS --> META[IP, ports, SNI if visible, timing, sizes]
-```
-
-</div>
-
-The sensor may lose payload visibility but still keeps useful metadata.
-
-Important shift:
-
-> from exact payload signatures to protocol metadata and behavior.
-
----
-
 # Encrypted traffic analysis
 
 ETA-style detection uses flow features rather than plaintext.
@@ -826,7 +763,7 @@ ETA-style detection uses flow features rather than plaintext.
 flowchart LR
   FLOW[Encrypted flow] --> F1[packet sizes]
   FLOW --> F2[timing]
-  FLOW --> F3[TLS fingerprint]
+  FLOW --> F3["JA4+ fingerprint"]
   FLOW --> F4[DNS context]
   F1 --> MODEL[scoring model]
   F2 --> MODEL
@@ -837,22 +774,15 @@ flowchart LR
 
 </div>
 
-Caution for students:
+**From JA3 to JA4+:** JA3 hashed TLS ClientHello fields in order, but Chrome's TLS extension order randomization (2023) broke its stability. **JA4** (FoxIO 2023) sorts ciphers and extensions before hashing, producing a stable fingerprint with a human-readable prefix encoding transport type, TLS version, SNI presence, cipher count, and ALPN.
 
-- this is probabilistic;
-- it needs baselines;
-- it produces hunt leads, not mathematical proof.
+The **JA4+ suite** extends fingerprinting to:
+- **JA4S** — ServerHello fingerprint; identifies malware C2 families (Cobalt Strike, Sliver)
+- **JA4H** — HTTP client fingerprint
+- **JA4SSH** — SSH session profiling (keystroke vs. file transfer)
+- **JA4T** — TCP/OS fingerprint
 
----
-
-# Review questions
-
-1. What is the operational difference between IDS and IPS?
-2. Why can SPAN visibility be incomplete?
-3. Why is protocol parsing better than simple byte matching?
-4. What does Zeek add beyond signatures?
-5. Why are false positives dangerous in IPS mode?
-6. What can still be learned from encrypted traffic?
+JA4 is BSD 3-Clause licensed; the rest of the JA4+ suite is FoxIO License 1.1 (free for internal and academic use).
 
 ---
 
